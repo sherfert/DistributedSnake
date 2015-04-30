@@ -7,6 +7,11 @@ import org.umundo.core.Node;
 import org.umundo.core.Publisher;
 import org.umundo.core.Receiver;
 import org.umundo.core.Subscriber;
+import org.umundo.s11n.ITypedReceiver;
+import org.umundo.s11n.TypedPublisher;
+import org.umundo.s11n.TypedSubscriber;
+
+import com.example.test01.ChatMsg.ChatMessage;
 
 import android.app.Activity;
 import android.content.Context;
@@ -43,8 +48,8 @@ public class UMundoPingPongActivity extends Activity {
 	Thread testPublishing;
 	Discovery disc;
 	Node node;
-	Publisher fooPub;
-	Subscriber fooSub;
+	TypedPublisher fooPub;
+	TypedSubscriber fooSub;
 
 	public class TestPublishing implements Runnable {
 
@@ -53,10 +58,12 @@ public class UMundoPingPongActivity extends Activity {
 			String message = "This is foo from android";
 
 			while (testPublishing != null) {
-				Message msg = new Message();
-				msg.putMeta("position", "34");
-				msg.setData(message.getBytes());
-				fooPub.send(msg);
+//				Message msg = new Message();
+//				msg.putMeta("position", "34");
+//				msg.setData(message.getBytes());
+//				fooPub.send(msg);
+				ChatMessage chatMsg	= ChatMessage.newBuilder().setUsername("Ment").setPosition("34").build();	
+				fooPub.sendObject(chatMsg);
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
@@ -89,6 +96,23 @@ public class UMundoPingPongActivity extends Activity {
 		}
 	}
 
+	public class TestTypedReceiver implements ITypedReceiver {
+		public void receiveObject(Object object, Message msg) {
+			// we receive message instance as well for its meta-fields
+			final ChatMessage chatMsg = (ChatMessage) object; // check for
+														// um.s11n.type if there
+														// are different types
+			UMundoPingPongActivity.this.runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					tv.setText(tv.getText() + "MessageObject: "
+							+ new String(chatMsg.getUsername())
+							+ new String(chatMsg.getPosition()));
+				}
+			});
+		}
+	}
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -115,13 +139,14 @@ public class UMundoPingPongActivity extends Activity {
 		node = new Node();
 		disc.add(node);
 
-		fooPub = new Publisher("pingpong");
+		fooPub = new TypedPublisher("pingpong");
 		node.addPublisher(fooPub);
 
-		fooSub = new Subscriber("pingpong");
-		fooSub.setReceiver(new TestReceiver());
+		fooSub = new TypedSubscriber("pingpong");
+		fooSub.setReceiver(new TestTypedReceiver());
 		node.addSubscriber(fooSub);
-
+		fooSub.registerType(ChatMessage.class);
+		
 		testPublishing = new Thread(new TestPublishing());
 		testPublishing.start();
 	}
