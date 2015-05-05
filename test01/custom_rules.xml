@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="UMundoPingPongActivity" default="help">
+	<target name="gen_instrument_install" depends="gen,instrument,installi" />
+	
+	<target name="gen">
+	    <mkdir dir="gen" />
+	    <exec executable="protoc">
+    		<arg value="--proto_path=./protos/"/>
+    		<arg value="--java_out=./gen/"/>
+    		<arg value="./protos/*.proto"/>
+  		</exec>
+	</target>
+</project>
