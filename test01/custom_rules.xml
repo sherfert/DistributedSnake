@@ -4,10 +4,13 @@
 	
 	<target name="gen">
 	    <mkdir dir="gen" />
-	    <exec executable="protoc">
+	    
+	    <apply executable="protoc" relative="true"> 
     		<arg value="--proto_path=./protos/"/>
     		<arg value="--java_out=./gen/"/>
-    		<arg value="./protos/*.proto"/>
-  		</exec>
+    		<fileset dir=".">
+	            <include name="protos/*.proto"/>
+	        </fileset>
+  		</apply>
 	</target>
 </project>
