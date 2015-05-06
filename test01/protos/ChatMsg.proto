@@ -2,6 +2,7 @@ option java_package = "com.example.test01";
 message ChatMessage {
     required string username = 1;
     required string position = 2;
+    repeated SnakePart snake = 5;
     optional string message = 3;
     enum Type {
         NORMAL = 0;
@@ -9,4 +10,9 @@ message ChatMessage {
         LEFT = 2;
     }
     optional Type type = 4[default = NORMAL];
+}
+
+message SnakePart {
+	required int32 x = 1;
+	required int32 y = 2;
 }

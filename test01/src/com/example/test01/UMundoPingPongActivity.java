@@ -1,5 +1,7 @@
 package com.example.test01;
 
+import java.util.List;
+
 import org.umundo.core.Discovery;
 import org.umundo.core.Discovery.DiscoveryType;
 import org.umundo.core.Message;
@@ -12,6 +14,8 @@ import org.umundo.s11n.TypedPublisher;
 import org.umundo.s11n.TypedSubscriber;
 
 import com.example.test01.ChatMsg.ChatMessage;
+import com.example.test01.ChatMsg.ChatMessage.Builder;
+import com.example.test01.ChatMsg.SnakePart;
 
 import android.app.Activity;
 import android.content.Context;
@@ -146,6 +150,19 @@ public class UMundoPingPongActivity extends Activity {
 		fooSub.setReceiver(new TestTypedReceiver());
 		node.addSubscriber(fooSub);
 		fooSub.registerType(ChatMessage.class);
+		
+		SnakePart s = SnakePart.newBuilder().setX(3).setY(5).build();
+        ChatMessage msg;
+        msg = ChatMessage.newBuilder().addSnake(s).setUsername("Blah").setPosition("ahh").build();
+		String info = msg.getSnakeList().getClass().getSimpleName().toString();
+		try {
+			Builder mBuikder = msg.toBuilder();
+			mBuikder.getSnakeList().remove(0);
+            ChatMessage msg2 = mBuikder.build();
+            List<SnakePart> list2 = msg2.getSnakeList();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 		
 		testPublishing = new Thread(new TestPublishing());
 		testPublishing.start();

@@ -41,6 +41,31 @@ public final class ChatMsg {
     com.google.protobuf.ByteString
         getPositionBytes();
 
+    // repeated .SnakePart snake = 5;
+    /**
+     * <code>repeated .SnakePart snake = 5;</code>
+     */
+    java.util.List<com.example.test01.ChatMsg.SnakePart> 
+        getSnakeList();
+    /**
+     * <code>repeated .SnakePart snake = 5;</code>
+     */
+    com.example.test01.ChatMsg.SnakePart getSnake(int index);
+    /**
+     * <code>repeated .SnakePart snake = 5;</code>
+     */
+    int getSnakeCount();
+    /**
+     * <code>repeated .SnakePart snake = 5;</code>
+     */
+    java.util.List<? extends com.example.test01.ChatMsg.SnakePartOrBuilder> 
+        getSnakeOrBuilderList();
+    /**
+     * <code>repeated .SnakePart snake = 5;</code>
+     */
+    com.example.test01.ChatMsg.SnakePartOrBuilder getSnakeOrBuilder(
+        int index);
+
     // optional string message = 3;
     /**
      * <code>optional string message = 3;</code>
@@ -143,6 +168,14 @@ public final class ChatMsg {
               }
               break;
             }
+            case 42: {
+              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+                snake_ = new java.util.ArrayList<com.example.test01.ChatMsg.SnakePart>();
+                mutable_bitField0_ |= 0x00000004;
+              }
+              snake_.add(input.readMessage(com.example.test01.ChatMsg.SnakePart.PARSER, extensionRegistry));
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -151,6 +184,9 @@ public final class ChatMsg {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
+        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+          snake_ = java.util.Collections.unmodifiableList(snake_);
+        }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
@@ -360,6 +396,42 @@ public final class ChatMsg {
       }
     }
 
+    // repeated .SnakePart snake = 5;
+    public static final int SNAKE_FIELD_NUMBER = 5;
+    private java.util.List<com.example.test01.ChatMsg.SnakePart> snake_;
+    /**
+     * <code>repeated .SnakePart snake = 5;</code>
+     */
+    public java.util.List<com.example.test01.ChatMsg.SnakePart> getSnakeList() {
+      return snake_;
+    }
+    /**
+     * <code>repeated .SnakePart snake = 5;</code>
+     */
+    public java.util.List<? extends com.example.test01.ChatMsg.SnakePartOrBuilder> 
+        getSnakeOrBuilderList() {
+      return snake_;
+    }
+    /**
+     * <code>repeated .SnakePart snake = 5;</code>
+     */
+    public int getSnakeCount() {
+      return snake_.size();
+    }
+    /**
+     * <code>repeated .SnakePart snake = 5;</code>
+     */
+    public com.example.test01.ChatMsg.SnakePart getSnake(int index) {
+      return snake_.get(index);
+    }
+    /**
+     * <code>repeated .SnakePart snake = 5;</code>
+     */
+    public com.example.test01.ChatMsg.SnakePartOrBuilder getSnakeOrBuilder(
+        int index) {
+      return snake_.get(index);
+    }
+
     // optional string message = 3;
     public static final int MESSAGE_FIELD_NUMBER = 3;
     private java.lang.Object message_;
@@ -422,6 +494,7 @@ public final class ChatMsg {
     private void initFields() {
       username_ = "";
       position_ = "";
+      snake_ = java.util.Collections.emptyList();
       message_ = "";
       type_ = com.example.test01.ChatMsg.ChatMessage.Type.NORMAL;
     }
@@ -437,6 +510,12 @@ public final class ChatMsg {
       if (!hasPosition()) {
         memoizedIsInitialized = 0;
         return false;
+      }
+      for (int i = 0; i < getSnakeCount(); i++) {
+        if (!getSnake(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
       }
       memoizedIsInitialized = 1;
       return true;
@@ -456,6 +535,9 @@ public final class ChatMsg {
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         output.writeEnum(4, type_.getNumber());
+      }
+      for (int i = 0; i < snake_.size(); i++) {
+        output.writeMessage(5, snake_.get(i));
       }
       getUnknownFields().writeTo(output);
     }
@@ -481,6 +563,10 @@ public final class ChatMsg {
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(4, type_.getNumber());
+      }
+      for (int i = 0; i < snake_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(5, snake_.get(i));
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -590,6 +676,7 @@ public final class ChatMsg {
       }
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getSnakeFieldBuilder();
         }
       }
       private static Builder create() {
@@ -602,10 +689,16 @@ public final class ChatMsg {
         bitField0_ = (bitField0_ & ~0x00000001);
         position_ = "";
         bitField0_ = (bitField0_ & ~0x00000002);
+        if (snakeBuilder_ == null) {
+          snake_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000004);
+        } else {
+          snakeBuilder_.clear();
+        }
         message_ = "";
-        bitField0_ = (bitField0_ & ~0x00000004);
-        type_ = com.example.test01.ChatMsg.ChatMessage.Type.NORMAL;
         bitField0_ = (bitField0_ & ~0x00000008);
+        type_ = com.example.test01.ChatMsg.ChatMessage.Type.NORMAL;
+        bitField0_ = (bitField0_ & ~0x00000010);
         return this;
       }
 
@@ -642,11 +735,20 @@ public final class ChatMsg {
           to_bitField0_ |= 0x00000002;
         }
         result.position_ = position_;
-        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+        if (snakeBuilder_ == null) {
+          if (((bitField0_ & 0x00000004) == 0x00000004)) {
+            snake_ = java.util.Collections.unmodifiableList(snake_);
+            bitField0_ = (bitField0_ & ~0x00000004);
+          }
+          result.snake_ = snake_;
+        } else {
+          result.snake_ = snakeBuilder_.build();
+        }
+        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
           to_bitField0_ |= 0x00000004;
         }
         result.message_ = message_;
-        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
           to_bitField0_ |= 0x00000008;
         }
         result.type_ = type_;
@@ -676,8 +778,34 @@ public final class ChatMsg {
           position_ = other.position_;
           onChanged();
         }
+        if (snakeBuilder_ == null) {
+          if (!other.snake_.isEmpty()) {
+            if (snake_.isEmpty()) {
+              snake_ = other.snake_;
+              bitField0_ = (bitField0_ & ~0x00000004);
+            } else {
+              ensureSnakeIsMutable();
+              snake_.addAll(other.snake_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.snake_.isEmpty()) {
+            if (snakeBuilder_.isEmpty()) {
+              snakeBuilder_.dispose();
+              snakeBuilder_ = null;
+              snake_ = other.snake_;
+              bitField0_ = (bitField0_ & ~0x00000004);
+              snakeBuilder_ = 
+                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
+                   getSnakeFieldBuilder() : null;
+            } else {
+              snakeBuilder_.addAllMessages(other.snake_);
+            }
+          }
+        }
         if (other.hasMessage()) {
-          bitField0_ |= 0x00000004;
+          bitField0_ |= 0x00000008;
           message_ = other.message_;
           onChanged();
         }
@@ -696,6 +824,12 @@ public final class ChatMsg {
         if (!hasPosition()) {
           
           return false;
+        }
+        for (int i = 0; i < getSnakeCount(); i++) {
+          if (!getSnake(i).isInitialized()) {
+            
+            return false;
+          }
         }
         return true;
       }
@@ -867,13 +1001,253 @@ public final class ChatMsg {
         return this;
       }
 
+      // repeated .SnakePart snake = 5;
+      private java.util.List<com.example.test01.ChatMsg.SnakePart> snake_ =
+        java.util.Collections.emptyList();
+      private void ensureSnakeIsMutable() {
+        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
+          snake_ = new java.util.ArrayList<com.example.test01.ChatMsg.SnakePart>(snake_);
+          bitField0_ |= 0x00000004;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilder<
+          com.example.test01.ChatMsg.SnakePart, com.example.test01.ChatMsg.SnakePart.Builder, com.example.test01.ChatMsg.SnakePartOrBuilder> snakeBuilder_;
+
+      /**
+       * <code>repeated .SnakePart snake = 5;</code>
+       */
+      public java.util.List<com.example.test01.ChatMsg.SnakePart> getSnakeList() {
+        if (snakeBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(snake_);
+        } else {
+          return snakeBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .SnakePart snake = 5;</code>
+       */
+      public int getSnakeCount() {
+        if (snakeBuilder_ == null) {
+          return snake_.size();
+        } else {
+          return snakeBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .SnakePart snake = 5;</code>
+       */
+      public com.example.test01.ChatMsg.SnakePart getSnake(int index) {
+        if (snakeBuilder_ == null) {
+          return snake_.get(index);
+        } else {
+          return snakeBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .SnakePart snake = 5;</code>
+       */
+      public Builder setSnake(
+          int index, com.example.test01.ChatMsg.SnakePart value) {
+        if (snakeBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureSnakeIsMutable();
+          snake_.set(index, value);
+          onChanged();
+        } else {
+          snakeBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .SnakePart snake = 5;</code>
+       */
+      public Builder setSnake(
+          int index, com.example.test01.ChatMsg.SnakePart.Builder builderForValue) {
+        if (snakeBuilder_ == null) {
+          ensureSnakeIsMutable();
+          snake_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          snakeBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .SnakePart snake = 5;</code>
+       */
+      public Builder addSnake(com.example.test01.ChatMsg.SnakePart value) {
+        if (snakeBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureSnakeIsMutable();
+          snake_.add(value);
+          onChanged();
+        } else {
+          snakeBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .SnakePart snake = 5;</code>
+       */
+      public Builder addSnake(
+          int index, com.example.test01.ChatMsg.SnakePart value) {
+        if (snakeBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureSnakeIsMutable();
+          snake_.add(index, value);
+          onChanged();
+        } else {
+          snakeBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .SnakePart snake = 5;</code>
+       */
+      public Builder addSnake(
+          com.example.test01.ChatMsg.SnakePart.Builder builderForValue) {
+        if (snakeBuilder_ == null) {
+          ensureSnakeIsMutable();
+          snake_.add(builderForValue.build());
+          onChanged();
+        } else {
+          snakeBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .SnakePart snake = 5;</code>
+       */
+      public Builder addSnake(
+          int index, com.example.test01.ChatMsg.SnakePart.Builder builderForValue) {
+        if (snakeBuilder_ == null) {
+          ensureSnakeIsMutable();
+          snake_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          snakeBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .SnakePart snake = 5;</code>
+       */
+      public Builder addAllSnake(
+          java.lang.Iterable<? extends com.example.test01.ChatMsg.SnakePart> values) {
+        if (snakeBuilder_ == null) {
+          ensureSnakeIsMutable();
+          super.addAll(values, snake_);
+          onChanged();
+        } else {
+          snakeBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .SnakePart snake = 5;</code>
+       */
+      public Builder clearSnake() {
+        if (snakeBuilder_ == null) {
+          snake_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000004);
+          onChanged();
+        } else {
+          snakeBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .SnakePart snake = 5;</code>
+       */
+      public Builder removeSnake(int index) {
+        if (snakeBuilder_ == null) {
+          ensureSnakeIsMutable();
+          snake_.remove(index);
+          onChanged();
+        } else {
+          snakeBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .SnakePart snake = 5;</code>
+       */
+      public com.example.test01.ChatMsg.SnakePart.Builder getSnakeBuilder(
+          int index) {
+        return getSnakeFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .SnakePart snake = 5;</code>
+       */
+      public com.example.test01.ChatMsg.SnakePartOrBuilder getSnakeOrBuilder(
+          int index) {
+        if (snakeBuilder_ == null) {
+          return snake_.get(index);  } else {
+          return snakeBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .SnakePart snake = 5;</code>
+       */
+      public java.util.List<? extends com.example.test01.ChatMsg.SnakePartOrBuilder> 
+           getSnakeOrBuilderList() {
+        if (snakeBuilder_ != null) {
+          return snakeBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(snake_);
+        }
+      }
+      /**
+       * <code>repeated .SnakePart snake = 5;</code>
+       */
+      public com.example.test01.ChatMsg.SnakePart.Builder addSnakeBuilder() {
+        return getSnakeFieldBuilder().addBuilder(
+            com.example.test01.ChatMsg.SnakePart.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .SnakePart snake = 5;</code>
+       */
+      public com.example.test01.ChatMsg.SnakePart.Builder addSnakeBuilder(
+          int index) {
+        return getSnakeFieldBuilder().addBuilder(
+            index, com.example.test01.ChatMsg.SnakePart.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .SnakePart snake = 5;</code>
+       */
+      public java.util.List<com.example.test01.ChatMsg.SnakePart.Builder> 
+           getSnakeBuilderList() {
+        return getSnakeFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilder<
+          com.example.test01.ChatMsg.SnakePart, com.example.test01.ChatMsg.SnakePart.Builder, com.example.test01.ChatMsg.SnakePartOrBuilder> 
+          getSnakeFieldBuilder() {
+        if (snakeBuilder_ == null) {
+          snakeBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
+              com.example.test01.ChatMsg.SnakePart, com.example.test01.ChatMsg.SnakePart.Builder, com.example.test01.ChatMsg.SnakePartOrBuilder>(
+                  snake_,
+                  ((bitField0_ & 0x00000004) == 0x00000004),
+                  getParentForChildren(),
+                  isClean());
+          snake_ = null;
+        }
+        return snakeBuilder_;
+      }
+
       // optional string message = 3;
       private java.lang.Object message_ = "";
       /**
        * <code>optional string message = 3;</code>
        */
       public boolean hasMessage() {
-        return ((bitField0_ & 0x00000004) == 0x00000004);
+        return ((bitField0_ & 0x00000008) == 0x00000008);
       }
       /**
        * <code>optional string message = 3;</code>
@@ -913,7 +1287,7 @@ public final class ChatMsg {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000004;
+  bitField0_ |= 0x00000008;
         message_ = value;
         onChanged();
         return this;
@@ -922,7 +1296,7 @@ public final class ChatMsg {
        * <code>optional string message = 3;</code>
        */
       public Builder clearMessage() {
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ = (bitField0_ & ~0x00000008);
         message_ = getDefaultInstance().getMessage();
         onChanged();
         return this;
@@ -935,7 +1309,7 @@ public final class ChatMsg {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000004;
+  bitField0_ |= 0x00000008;
         message_ = value;
         onChanged();
         return this;
@@ -947,7 +1321,7 @@ public final class ChatMsg {
        * <code>optional .ChatMessage.Type type = 4 [default = NORMAL];</code>
        */
       public boolean hasType() {
-        return ((bitField0_ & 0x00000008) == 0x00000008);
+        return ((bitField0_ & 0x00000010) == 0x00000010);
       }
       /**
        * <code>optional .ChatMessage.Type type = 4 [default = NORMAL];</code>
@@ -962,7 +1336,7 @@ public final class ChatMsg {
         if (value == null) {
           throw new NullPointerException();
         }
-        bitField0_ |= 0x00000008;
+        bitField0_ |= 0x00000010;
         type_ = value;
         onChanged();
         return this;
@@ -971,7 +1345,7 @@ public final class ChatMsg {
        * <code>optional .ChatMessage.Type type = 4 [default = NORMAL];</code>
        */
       public Builder clearType() {
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ = (bitField0_ & ~0x00000010);
         type_ = com.example.test01.ChatMsg.ChatMessage.Type.NORMAL;
         onChanged();
         return this;
@@ -988,11 +1362,509 @@ public final class ChatMsg {
     // @@protoc_insertion_point(class_scope:ChatMessage)
   }
 
+  public interface SnakePartOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+
+    // required int32 x = 1;
+    /**
+     * <code>required int32 x = 1;</code>
+     */
+    boolean hasX();
+    /**
+     * <code>required int32 x = 1;</code>
+     */
+    int getX();
+
+    // required int32 y = 2;
+    /**
+     * <code>required int32 y = 2;</code>
+     */
+    boolean hasY();
+    /**
+     * <code>required int32 y = 2;</code>
+     */
+    int getY();
+  }
+  /**
+   * Protobuf type {@code SnakePart}
+   */
+  public static final class SnakePart extends
+      com.google.protobuf.GeneratedMessage
+      implements SnakePartOrBuilder {
+    // Use SnakePart.newBuilder() to construct.
+    private SnakePart(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private SnakePart(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final SnakePart defaultInstance;
+    public static SnakePart getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public SnakePart getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private SnakePart(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 8: {
+              bitField0_ |= 0x00000001;
+              x_ = input.readInt32();
+              break;
+            }
+            case 16: {
+              bitField0_ |= 0x00000002;
+              y_ = input.readInt32();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.example.test01.ChatMsg.internal_static_SnakePart_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.example.test01.ChatMsg.internal_static_SnakePart_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.example.test01.ChatMsg.SnakePart.class, com.example.test01.ChatMsg.SnakePart.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<SnakePart> PARSER =
+        new com.google.protobuf.AbstractParser<SnakePart>() {
+      public SnakePart parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new SnakePart(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<SnakePart> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    // required int32 x = 1;
+    public static final int X_FIELD_NUMBER = 1;
+    private int x_;
+    /**
+     * <code>required int32 x = 1;</code>
+     */
+    public boolean hasX() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required int32 x = 1;</code>
+     */
+    public int getX() {
+      return x_;
+    }
+
+    // required int32 y = 2;
+    public static final int Y_FIELD_NUMBER = 2;
+    private int y_;
+    /**
+     * <code>required int32 y = 2;</code>
+     */
+    public boolean hasY() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>required int32 y = 2;</code>
+     */
+    public int getY() {
+      return y_;
+    }
+
+    private void initFields() {
+      x_ = 0;
+      y_ = 0;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      if (!hasX()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasY()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeInt32(1, x_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeInt32(2, y_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(1, x_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(2, y_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static com.example.test01.ChatMsg.SnakePart parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.example.test01.ChatMsg.SnakePart parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.example.test01.ChatMsg.SnakePart parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.example.test01.ChatMsg.SnakePart parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.example.test01.ChatMsg.SnakePart parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static com.example.test01.ChatMsg.SnakePart parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static com.example.test01.ChatMsg.SnakePart parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static com.example.test01.ChatMsg.SnakePart parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static com.example.test01.ChatMsg.SnakePart parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static com.example.test01.ChatMsg.SnakePart parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(com.example.test01.ChatMsg.SnakePart prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code SnakePart}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements com.example.test01.ChatMsg.SnakePartOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.example.test01.ChatMsg.internal_static_SnakePart_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.example.test01.ChatMsg.internal_static_SnakePart_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.example.test01.ChatMsg.SnakePart.class, com.example.test01.ChatMsg.SnakePart.Builder.class);
+      }
+
+      // Construct using com.example.test01.ChatMsg.SnakePart.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        x_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        y_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.example.test01.ChatMsg.internal_static_SnakePart_descriptor;
+      }
+
+      public com.example.test01.ChatMsg.SnakePart getDefaultInstanceForType() {
+        return com.example.test01.ChatMsg.SnakePart.getDefaultInstance();
+      }
+
+      public com.example.test01.ChatMsg.SnakePart build() {
+        com.example.test01.ChatMsg.SnakePart result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public com.example.test01.ChatMsg.SnakePart buildPartial() {
+        com.example.test01.ChatMsg.SnakePart result = new com.example.test01.ChatMsg.SnakePart(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.x_ = x_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.y_ = y_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.example.test01.ChatMsg.SnakePart) {
+          return mergeFrom((com.example.test01.ChatMsg.SnakePart)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.example.test01.ChatMsg.SnakePart other) {
+        if (other == com.example.test01.ChatMsg.SnakePart.getDefaultInstance()) return this;
+        if (other.hasX()) {
+          setX(other.getX());
+        }
+        if (other.hasY()) {
+          setY(other.getY());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasX()) {
+          
+          return false;
+        }
+        if (!hasY()) {
+          
+          return false;
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.example.test01.ChatMsg.SnakePart parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.example.test01.ChatMsg.SnakePart) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // required int32 x = 1;
+      private int x_ ;
+      /**
+       * <code>required int32 x = 1;</code>
+       */
+      public boolean hasX() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required int32 x = 1;</code>
+       */
+      public int getX() {
+        return x_;
+      }
+      /**
+       * <code>required int32 x = 1;</code>
+       */
+      public Builder setX(int value) {
+        bitField0_ |= 0x00000001;
+        x_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required int32 x = 1;</code>
+       */
+      public Builder clearX() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        x_ = 0;
+        onChanged();
+        return this;
+      }
+
+      // required int32 y = 2;
+      private int y_ ;
+      /**
+       * <code>required int32 y = 2;</code>
+       */
+      public boolean hasY() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>required int32 y = 2;</code>
+       */
+      public int getY() {
+        return y_;
+      }
+      /**
+       * <code>required int32 y = 2;</code>
+       */
+      public Builder setY(int value) {
+        bitField0_ |= 0x00000002;
+        y_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required int32 y = 2;</code>
+       */
+      public Builder clearY() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        y_ = 0;
+        onChanged();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:SnakePart)
+    }
+
+    static {
+      defaultInstance = new SnakePart(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:SnakePart)
+  }
+
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_ChatMessage_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_ChatMessage_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_SnakePart_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_SnakePart_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -1002,11 +1874,13 @@ public final class ChatMsg {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\rChatMsg.proto\"\225\001\n\013ChatMessage\022\020\n\010usern" +
-      "ame\030\001 \002(\t\022\020\n\010position\030\002 \002(\t\022\017\n\007message\030\003" +
-      " \001(\t\022\'\n\004type\030\004 \001(\0162\021.ChatMessage.Type:\006N" +
-      "ORMAL\"(\n\004Type\022\n\n\006NORMAL\020\000\022\n\n\006JOINED\020\001\022\010\n" +
-      "\004LEFT\020\002B\024\n\022com.example.test01"
+      "\n\rChatMsg.proto\"\260\001\n\013ChatMessage\022\020\n\010usern" +
+      "ame\030\001 \002(\t\022\020\n\010position\030\002 \002(\t\022\031\n\005snake\030\005 \003" +
+      "(\0132\n.SnakePart\022\017\n\007message\030\003 \001(\t\022\'\n\004type\030" +
+      "\004 \001(\0162\021.ChatMessage.Type:\006NORMAL\"(\n\004Type" +
+      "\022\n\n\006NORMAL\020\000\022\n\n\006JOINED\020\001\022\010\n\004LEFT\020\002\"!\n\tSn" +
+      "akePart\022\t\n\001x\030\001 \002(\005\022\t\n\001y\030\002 \002(\005B\024\n\022com.exa" +
+      "mple.test01"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -1018,7 +1892,13 @@ public final class ChatMsg {
           internal_static_ChatMessage_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_ChatMessage_descriptor,
-              new java.lang.String[] { "Username", "Position", "Message", "Type", });
+              new java.lang.String[] { "Username", "Position", "Snake", "Message", "Type", });
+          internal_static_SnakePart_descriptor =
+            getDescriptor().getMessageTypes().get(1);
+          internal_static_SnakePart_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_SnakePart_descriptor,
+              new java.lang.String[] { "X", "Y", });
           return null;
         }
       };
