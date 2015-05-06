@@ -151,15 +151,16 @@ public class UMundoPingPongActivity extends Activity {
 		node.addSubscriber(fooSub);
 		fooSub.registerType(ChatMessage.class);
 		
-		SnakePart s = SnakePart.newBuilder().setX(3).setY(5).build();
-        ChatMessage msg;
-        msg = ChatMessage.newBuilder().addSnake(s).setUsername("Blah").setPosition("ahh").build();
-		String info = msg.getSnakeList().getClass().getSimpleName().toString();
+		SnakePart s0 = SnakePart.newBuilder().setX(3).setY(5).build();
+		SnakePart s1 = SnakePart.newBuilder().setX(4).setY(6).build();
+        ChatMessage msg = ChatMessage.newBuilder().addSnake(s0).addSnake(s1)
+        		.setUsername("Blah").setPosition("ahh").build();
 		try {
-			Builder mBuikder = msg.toBuilder();
-			mBuikder.getSnakeList().remove(0);
-            ChatMessage msg2 = mBuikder.build();
+			Builder mBuilder = msg.toBuilder();
+			mBuilder.removeSnake(0);//   getSnakeList().remove(0);
+            ChatMessage msg2 = mBuilder.build();
             List<SnakePart> list2 = msg2.getSnakeList();
+            System.out.println(list2);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
