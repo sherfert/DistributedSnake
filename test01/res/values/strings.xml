@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">test01</string>
+    <string name="app_name">Distributed Snake</string>
     <string name="hello_world">Hello, cruel world!</string>
     <string name="current">Current/Next</string>
     <string name="action_settings">Settings</string>
     <string name="button_startGame">Start Game</string>
+    <string name="mainActivity_nameEditText_hint">Enter a username</string>
+    <string name="mainActivity_invalidUsername">Invalid Username</string>
+    <string name="mainActivity_invalidUsernameMessage">The username cannot be empty</string>
+    
 
 </resources>

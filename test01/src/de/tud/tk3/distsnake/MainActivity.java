@@ -19,13 +19,16 @@ import de.tud.tk3.distsnake.GameStatus.GameState.Builder;
 import de.tud.tk3.distsnake.GameStatus.Coordinates;
 import de.tud.tk3.distsnake.GameStatus.GameState.Orientation;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.net.wifi.WifiManager.MulticastLock;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 /**
@@ -60,7 +63,18 @@ public class MainActivity extends Activity {
 	
 	public void startGame(View view) {
 		Intent intent = new Intent(this, GameActivity.class);
-		startActivity(intent);
+		EditText usernameEditText = (EditText) findViewById(R.id.usernameEditText);
+		String username = usernameEditText.getText().toString();
+		if(username.trim().isEmpty()){
+			new AlertDialog.Builder(this)
+			    .setTitle(R.string.mainActivity_invalidUsername)
+			    .setMessage(R.string.mainActivity_invalidUsernameMessage)
+			    .setPositiveButton(android.R.string.yes, null)
+			    .setIcon(android.R.drawable.ic_dialog_alert)
+			    .show();
+		} else {
+			startActivity(intent);
+		}		
 	}
 
 	public class TestPublishing implements Runnable {
