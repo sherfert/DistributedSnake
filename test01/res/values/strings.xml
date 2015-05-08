@@ -3,6 +3,8 @@
 
     <string name="app_name">test01</string>
     <string name="hello_world">Hello, cruel world!</string>
+    <string name="current">Current/Next</string>
     <string name="action_settings">Settings</string>
+    <string name="button_startGame">Start Game</string>
 
 </resources>

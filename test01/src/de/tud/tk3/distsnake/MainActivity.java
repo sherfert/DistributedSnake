@@ -19,10 +19,12 @@ import com.example.test01.ChatMsg.SnakePart;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.net.wifi.WifiManager.MulticastLock;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 /**
@@ -48,14 +50,20 @@ import android.widget.TextView;
  */
 public class MainActivity extends Activity {
 
-	TextView tv;
+	//TextView tv;
 	Thread testPublishing;
 	Discovery disc;
 	Node node;
 	TypedPublisher fooPub;
 	TypedSubscriber fooSub;
+	
+	public void startGame(View view) {
+		Intent intent = new Intent(this, GameActivity.class);
+		startActivity(intent);
+	}
 
 	public class TestPublishing implements Runnable {
+		
 
 		@Override
 		public void run() {
@@ -76,7 +84,7 @@ public class MainActivity extends Activity {
 				MainActivity.this.runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						tv.setText(tv.getText() + "o");
+						//tv.setText(tv.getText() + "o");
 					}
 				});
 			}
@@ -92,9 +100,9 @@ public class MainActivity extends Activity {
 			MainActivity.this.runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					tv.setText(tv.getText() + "Message: "
-							+ new String(msg.getData())
-							+ msg.getMeta("position"));
+//					tv.setText(tv.getText() + "Message: "
+//							+ new String(msg.getData())
+//							+ msg.getMeta("position"));
 				}
 			});
 		}
@@ -109,9 +117,9 @@ public class MainActivity extends Activity {
 			MainActivity.this.runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					tv.setText(tv.getText() + "MessageObject: "
-							+ new String(chatMsg.getUsername())
-							+ new String(chatMsg.getPosition()));
+//					tv.setText(tv.getText() + "MessageObject: "
+//							+ new String(chatMsg.getUsername())
+//							+ new String(chatMsg.getPosition()));
 				}
 			});
 		}
@@ -121,10 +129,12 @@ public class MainActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+		if(true)return;
 
-		tv = new TextView(this);
-		tv.setText("");
-		setContentView(tv);
+//		tv = new TextView(this);
+//		tv.setText("");
+		//setContentView(tv);
 
 		WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 		if (wifi != null) {
