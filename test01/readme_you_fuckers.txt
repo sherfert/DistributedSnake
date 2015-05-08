@@ -1,3 +1,4 @@
+0) Make sure to install ant and protobuf-compiler first
 1) Go to your sdk location and include <sdk_location>/tools in your path
 2) Restart your terminal
 3) Go to test01 and execute 'android update project -p .'
