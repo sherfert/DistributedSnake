@@ -11,17 +11,17 @@
     tools:context="de.tud.tk3.distsnake.MainActivity" >
 
     <EditText
-        android:id="@+id/usernameEditText"
+        android:id="@+id/mainActivity_editText_username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="@string/mainActivity_nameEditText_hint" />
+        android:hint="@string/mainActivity_editText_username_hint" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:onClick="startGame"
-        android:text="@string/button_startGame" />
+        android:text="@string/mainActivity_button_startGame" />
 
 </LinearLayout>

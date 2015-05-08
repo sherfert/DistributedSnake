@@ -63,7 +63,7 @@ public class MainActivity extends Activity {
 	
 	public void startGame(View view) {
 		Intent intent = new Intent(this, GameActivity.class);
-		EditText usernameEditText = (EditText) findViewById(R.id.usernameEditText);
+		EditText usernameEditText = (EditText) findViewById(R.id.mainActivity_editText_username);
 		String username = usernameEditText.getText().toString();
 		if(username.trim().isEmpty()){
 			new AlertDialog.Builder(this)
