@@ -13,10 +13,11 @@ import org.umundo.s11n.ITypedReceiver;
 import org.umundo.s11n.TypedPublisher;
 import org.umundo.s11n.TypedSubscriber;
 
-import com.example.test01.ChatMsg.ChatMessage;
-import com.example.test01.ChatMsg.ChatMessage.Builder;
-import com.example.test01.ChatMsg.SnakePart;
-
+import de.tud.tk3.distsnake.GameStatus;
+import de.tud.tk3.distsnake.GameStatus.GameState;
+import de.tud.tk3.distsnake.GameStatus.GameState.Builder;
+import de.tud.tk3.distsnake.GameStatus.Coordinates;
+import de.tud.tk3.distsnake.GameStatus.GameState.Orientation;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -74,8 +75,16 @@ public class MainActivity extends Activity {
 //				msg.putMeta("position", "34");
 //				msg.setData(message.getBytes());
 //				fooPub.send(msg);
-				ChatMessage chatMsg	= ChatMessage.newBuilder().setUsername("Ment").setPosition("34").build();	
+				Coordinates gCord = Coordinates.newBuilder().setX(1).setY(2).build();
+				Coordinates sCord1 = Coordinates.newBuilder().setX(10).setY(15).build();
+				Coordinates sCord2 = Coordinates.newBuilder().setX(11).setY(15).build();
+                GameState chatMsg;
+				try {
+				chatMsg= GameState.newBuilder().setGoal(gCord).addSnake(sCord1).addSnake(sCord2).setOrient(Orientation.EAST).setRemainSteps(10).build();
 				fooPub.sendObject(chatMsg);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
@@ -111,7 +120,7 @@ public class MainActivity extends Activity {
 	public class TestTypedReceiver implements ITypedReceiver {
 		public void receiveObject(Object object, Message msg) {
 			// we receive message instance as well for its meta-fields
-			final ChatMessage chatMsg = (ChatMessage) object; // check for
+			final GameState chatMsg = (GameState) object; // check for
 														// um.s11n.type if there
 														// are different types
 			MainActivity.this.runOnUiThread(new Runnable() {
@@ -159,11 +168,12 @@ public class MainActivity extends Activity {
 		fooSub = new TypedSubscriber("pingpong");
 		fooSub.setReceiver(new TestTypedReceiver());
 		node.addSubscriber(fooSub);
-		fooSub.registerType(ChatMessage.class);
+		fooSub.registerType(GameState.class);
 		
-		SnakePart s0 = SnakePart.newBuilder().setX(3).setY(5).build();
-		SnakePart s1 = SnakePart.newBuilder().setX(4).setY(6).build();
-        ChatMessage msg = ChatMessage.newBuilder().addSnake(s0).addSnake(s1)
+		/*
+		Coordinates s0 = Coordinates.newBuilder().setX(3).setY(5).build();
+		Coordinates s1 = Coordinates.newBuilder().setX(4).setY(6).build();
+		GameState msg = GameState.newBuilder().addSnake(s0).addSnake(s1)
         		.setUsername("Blah").setPosition("ahh").build();
 		try {
 			Builder mBuilder = msg.toBuilder();
@@ -174,6 +184,7 @@ public class MainActivity extends Activity {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
+		*/
 		
 		testPublishing = new Thread(new TestPublishing());
 		testPublishing.start();
