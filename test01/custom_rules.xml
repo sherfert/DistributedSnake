@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="UMundoPingPongActivity" default="gen_instrument_install">
+<project name="DistributedSnake" default="gen_instrument_install">
 	<target name="gen_instrument_install" depends="gen,instrument,installi" />
 	
 	<target name="gen">
