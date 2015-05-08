@@ -163,7 +163,7 @@ public class MainActivity extends Activity {
 		/*
 		Coordinates s0 = Coordinates.newBuilder().setX(3).setY(5).build();
 		Coordinates s1 = Coordinates.newBuilder().setX(4).setY(6).build();
-        GameState msg = GameState.newBuilder().addSnake(s0).addSnake(s1)
+		GameState msg = GameState.newBuilder().addSnake(s0).addSnake(s1)
         		.setUsername("Blah").setPosition("ahh").build();
 		try {
 			Builder mBuilder = msg.toBuilder();
