@@ -1,0 +1,19 @@
+option java_package = "de.tud.tk3.distsnake";
+message GameState {
+    required Coordinates goal = 1;
+    repeated Coordinates snake = 2;
+    enum Orientation {
+        EAST = 0;
+        SOUTH = 1;
+        WEST = 2;
+        NORTH = 3;
+    }
+    required Orientation orient = 3;
+    required int32 remainSteps = 4;
+    optional string currentPlayer = 5;
+}
+
+message Coordinates {
+	required int32 x = 1;
+	required int32 y = 2;
+}
