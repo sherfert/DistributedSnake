@@ -1,4 +1,4 @@
-package com.example.test01;
+package de.tud.tk3.distsnake;
 
 import java.util.List;
 
