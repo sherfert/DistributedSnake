@@ -1,4 +1,4 @@
-package com.example.test01;
+package de.tud.tk3.distsnake;
 
 import java.util.List;
 
@@ -46,7 +46,7 @@ import android.widget.TextView;
  * @author sradomski
  *
  */
-public class UMundoPingPongActivity extends Activity {
+public class MainActivity extends Activity {
 
 	TextView tv;
 	Thread testPublishing;
@@ -73,7 +73,7 @@ public class UMundoPingPongActivity extends Activity {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				UMundoPingPongActivity.this.runOnUiThread(new Runnable() {
+				MainActivity.this.runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
 						tv.setText(tv.getText() + "o");
@@ -89,7 +89,7 @@ public class UMundoPingPongActivity extends Activity {
 			for (String key : msg.getMeta().keySet()) {
 				Log.i("umundo", key + ": " + msg.getMeta(key));
 			}
-			UMundoPingPongActivity.this.runOnUiThread(new Runnable() {
+			MainActivity.this.runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
 					tv.setText(tv.getText() + "Message: "
@@ -106,7 +106,7 @@ public class UMundoPingPongActivity extends Activity {
 			final ChatMessage chatMsg = (ChatMessage) object; // check for
 														// um.s11n.type if there
 														// are different types
-			UMundoPingPongActivity.this.runOnUiThread(new Runnable() {
+			MainActivity.this.runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
 					tv.setText(tv.getText() + "MessageObject: "
