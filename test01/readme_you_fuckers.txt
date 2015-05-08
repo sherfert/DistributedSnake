@@ -1,8 +1,9 @@
+0) Make sure to install ant and protobuf-compiler first
 1) Go to your sdk location and include <sdk_location>/tools in your path
 2) Restart your terminal
-3) Go to test01 and execute 'android update projects -p .'
+3) Go to test01 and execute 'android update project -p .'
 4) 'cd ../appcombat_v7'
-5) 'android update projects -p .'
+5) 'android update project -p .'
 6) 'cd ../test01'
 7) 'ant clean'
 8) DONE! To compile it on your phone: 'ant gen_instrument_install'
