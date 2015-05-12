@@ -10,10 +10,10 @@
     <string name="mainActivity_invalidUsername">Invalid Username</string>
     <string name="mainActivity_invalidUsernameMessage">The username cannot be empty</string>
     
-    <string name="gameActivity_button_up">U</string>
-    <string name="gameActivity_button_right">R</string>
-    <string name="gameActivity_button_down">D</string>
-    <string name="gameActivity_button_left">L</string>
+    <string name="gameActivity_button_up">▲</string>
+    <string name="gameActivity_button_right">▶</string>
+    <string name="gameActivity_button_down">▼</string>
+    <string name="gameActivity_button_left">◀</string>
     
 
 </resources>
