@@ -18,7 +18,8 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="de.tud.tk3.distsnake.gui.MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -26,7 +27,8 @@
         </activity>
         <activity
             android:name="de.tud.tk3.distsnake.gui.GameActivity"
-            android:label="@string/app_name" 
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:parentActivityName="de.tud.tk3.distsnake.gui.MainActivityvity"
             >
             <meta-data 
