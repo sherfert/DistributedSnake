@@ -17,7 +17,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="de.tud.tk3.distsnake.MainActivity"
+            android:name="de.tud.tk3.distsnake.gui.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,9 +25,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="de.tud.tk3.distsnake.GameActivity"
+            android:name="de.tud.tk3.distsnake.gui.GameActivity"
             android:label="@string/app_name" 
-            android:parentActivityName="de.tud.tk3.distsnake.MainActivity"
+            android:parentActivityName="de.tud.tk3.distsnake.gui.MainActivityvity"
             >
             <meta-data 
                 android:name="android.support.PARENT_ACTIVITY"

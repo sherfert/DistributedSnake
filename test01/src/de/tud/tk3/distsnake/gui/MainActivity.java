@@ -1,4 +1,4 @@
-package de.tud.tk3.distsnake;
+package de.tud.tk3.distsnake.gui;
 
 import java.util.List;
 
@@ -14,10 +14,14 @@ import org.umundo.s11n.TypedPublisher;
 import org.umundo.s11n.TypedSubscriber;
 
 import de.tud.tk3.distsnake.GameStatus;
+import de.tud.tk3.distsnake.R;
 import de.tud.tk3.distsnake.GameStatus.GameState;
 import de.tud.tk3.distsnake.GameStatus.GameState.Builder;
 import de.tud.tk3.distsnake.GameStatus.Coordinates;
 import de.tud.tk3.distsnake.GameStatus.GameState.Orientation;
+import de.tud.tk3.distsnake.R.id;
+import de.tud.tk3.distsnake.R.layout;
+import de.tud.tk3.distsnake.R.string;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;

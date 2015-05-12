@@ -1,6 +1,4 @@
-package de.tud.tk3.distsnake;
-
-
+package de.tud.tk3.distsnake.gui;
 
 import de.tud.tk3.distsnake.R;
 import de.tud.tk3.distsnake.R.id;
@@ -30,18 +28,16 @@ public class GameActivity extends Activity {
 		paint.setColor(Color.parseColor("#CD5C5C"));
 		paint.setStrokeWidth(10);
 		paint.setStyle(Paint.Style.STROKE);
-		
-		 float[] intervals = new float[]{30.0f, 10.0f};
-		  float phase = 0;
-		   
-		  DashPathEffect dashPathEffect = 
-		    new DashPathEffect(intervals, phase);
-		 
-		  paint.setPathEffect(dashPathEffect);
-		 
-		
+
+		float[] intervals = new float[] { 30.0f, 10.0f };
+		float phase = 0;
+
+		DashPathEffect dashPathEffect = new DashPathEffect(intervals, phase);
+
+		paint.setPathEffect(dashPathEffect);
+
 		Path path = new Path();
-		
+
 		path.moveTo(50, 50);
 		path.lineTo(50, 500);
 		path.lineTo(200, 500);
@@ -51,7 +47,7 @@ public class GameActivity extends Activity {
 		Bitmap bg = Bitmap.createBitmap(480, 800, Bitmap.Config.ARGB_8888);
 		Canvas canvas = new Canvas(bg);
 		canvas.drawPath(path, paint);
-		
+
 		ll.setBackground(new BitmapDrawable(bg));
 	}
 
