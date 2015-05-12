@@ -12,8 +12,9 @@
 
     <TextView
         android:layout_width="wrap_content"
+        android:ellipsize="end"
         android:layout_height="wrap_content"
-        
+        android:lines="3"
         android:layout_row="0"
         android:layout_column="0"
         android:id="@+id/gameActivity_textView_currentPlayer" />

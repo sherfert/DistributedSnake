@@ -16,6 +16,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.Menu;
@@ -50,7 +51,7 @@ public class GameActivity extends Activity {
 		Bitmap bg = Bitmap.createBitmap(metrics, windowSize, windowSize,
 				Bitmap.Config.ARGB_8888);
 		canvas = new Canvas(bg);
-		
+
 		currentPlayer = (TextView) findViewById(R.id.gameActivity_textView_currentPlayer);
 
 		// Integrate canvas into layout
@@ -81,9 +82,15 @@ public class GameActivity extends Activity {
 		Coordinates goalCoordinates = Coordinates.newBuilder().setX(10)
 				.setY(12).build();
 		GameState gameState = GameState.newBuilder().addSnake(s0).addSnake(s1)
-				.addSnake(s2).setCurrentPlayer("Blah").setGoal(goalCoordinates)
-				.setOrient(Orientation.NORTH).setRemainSteps(1).build();
-		
+				.addSnake(s2).setCurrentPlayer("Blah").addPlayers("Ilmi").addPlayers("Satia")
+				.addPlayers("Ment")
+				.addPlayers("Omar")
+				.addPlayers("Shin")
+				.addPlayers("Ahmed Malik Al Madun")
+				.addPlayers("Waris Manisatienrattana")
+				.setGoal(goalCoordinates).setOrient(Orientation.NORTH)
+				.setRemainSteps(1).build();
+
 		updateGameDisplay(gameState);
 
 	}
@@ -101,8 +108,16 @@ public class GameActivity extends Activity {
 		canvas.drawCircle(gameState.getGoal().getX() * getUnitSize(windowSize),
 				gameState.getGoal().getY() * getUnitSize(windowSize),
 				getUnitSize(windowSize) / 2, goalPaint);
+
+		String namesToDisplay = "<h1><b>"
+				+ gameState.getCurrentPlayer() + "</b></h1>";
+		String playerList= "";
 		
-		currentPlayer.setText(gameState.getCurrentPlayer());
+		for(String player : gameState.getPlayersList())
+			playerList+= player + ", ";
+		
+
+		currentPlayer.setText(Html.fromHtml(namesToDisplay + playerList));
 	}
 
 	private int getUnitSize(int windowWidth) {
