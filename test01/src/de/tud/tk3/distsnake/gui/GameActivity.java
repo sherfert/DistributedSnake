@@ -23,8 +23,21 @@ import android.view.MenuItem;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class GameActivity extends Activity {
+
+	/**
+	 * Units for the game size. Both width and height.
+	 */
+	public static final int GAME_SIZE = 30;
+
+	private Canvas canvas;
+	private int windowSize;
+	private Paint snakePaint;
+	private Paint goalPaint;
+	private Paint bgPaint;
+	private TextView currentPlayer;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,22 +46,33 @@ public class GameActivity extends Activity {
 
 		// Create Bitmap and Canvas
 		DisplayMetrics metrics = getResources().getDisplayMetrics();
-		int width = metrics.widthPixels;
-		Bitmap bg = Bitmap.createBitmap(metrics, width, width,
+		windowSize = metrics.widthPixels;
+		Bitmap bg = Bitmap.createBitmap(metrics, windowSize, windowSize,
 				Bitmap.Config.ARGB_8888);
-		Canvas canvas = new Canvas(bg);
+		canvas = new Canvas(bg);
+		
+		currentPlayer = (TextView) findViewById(R.id.gameActivity_textView_currentPlayer);
 
 		// Integrate canvas into layout
 		LinearLayout ll = (LinearLayout) findViewById(R.id.canvas);
 		ll.setBackground(new BitmapDrawable(getResources(), bg));
-		ll.setLayoutParams(new GridLayout.LayoutParams(new LayoutParams(width,
-				width)));
+		ll.setLayoutParams(new GridLayout.LayoutParams(new LayoutParams(
+				windowSize, windowSize)));
 
 		// Paint for the backgroud
-		Paint bgPaint = new Paint();
+		bgPaint = new Paint();
 		bgPaint.setColor(Color.parseColor("#DADADA"));
 		bgPaint.setStyle(Paint.Style.FILL);
-		canvas.drawRect(0, 0, width, width, bgPaint);
+		canvas.drawRect(0, 0, windowSize, windowSize, bgPaint);
+
+		// Paint for the backgroud
+		snakePaint = new Paint();
+		snakePaint.setColor(Color.parseColor("#000000"));
+		snakePaint.setStyle(Paint.Style.FILL);
+
+		goalPaint = new Paint();
+		goalPaint.setColor(Color.parseColor("#FF0000"));
+		goalPaint.setStyle(Paint.Style.FILL);
 
 		// Mockup data TODO
 		Coordinates s0 = Coordinates.newBuilder().setX(3).setY(5).build();
@@ -60,16 +84,29 @@ public class GameActivity extends Activity {
 				.addSnake(s2).setCurrentPlayer("Blah").setGoal(goalCoordinates)
 				.setOrient(Orientation.NORTH).setRemainSteps(1).build();
 		
-		// Paint for the backgroud
-		Paint snakePaint = new Paint();
-		snakePaint.setColor(Color.parseColor("#000000"));
-		snakePaint.setStrokeWidth(10);
-		snakePaint.setStyle(Paint.Style.FILL);
+		updateGameDisplay(gameState);
 
-		canvas.drawRect(0, 0, width, width, bgPaint);
+	}
+
+	private void updateGameDisplay(GameState gameState) {
+		// Background
+		canvas.drawRect(0, 0, windowSize, windowSize, bgPaint);
+		// Snake
+		for (Coordinates snakePart : gameState.getSnakeList()) {
+			canvas.drawCircle(snakePart.getX() * getUnitSize(windowSize),
+					snakePart.getY() * getUnitSize(windowSize),
+					getUnitSize(windowSize) / 2, snakePaint);
+		}
+		// Goal
+		canvas.drawCircle(gameState.getGoal().getX() * getUnitSize(windowSize),
+				gameState.getGoal().getY() * getUnitSize(windowSize),
+				getUnitSize(windowSize) / 2, goalPaint);
 		
-		// Draw snake
-		canvas.drawCircle(30, 30, 5, snakePaint);
+		currentPlayer.setText(gameState.getCurrentPlayer());
+	}
+
+	private int getUnitSize(int windowWidth) {
+		return (int) (windowWidth / (GAME_SIZE));
 	}
 
 	@Override
