@@ -11,6 +11,7 @@ message GameState {
     required Orientation orient = 3;
     required int32 remainSteps = 4;
     optional string currentPlayer = 5;
+    repeated string players = 6;
 }
 
 message Coordinates {
