@@ -22,6 +22,8 @@ import de.tud.tk3.distsnake.GameStatus.GameState.Orientation;
 import de.tud.tk3.distsnake.R.id;
 import de.tud.tk3.distsnake.R.layout;
 import de.tud.tk3.distsnake.R.string;
+import de.tud.tk3.distsnake.connectivity.Connector;
+import de.tud.tk3.distsnake.gameLogic.Game;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -77,6 +79,9 @@ public class MainActivity extends Activity {
 			    .setIcon(android.R.drawable.ic_dialog_alert)
 			    .show();
 		} else {
+			Game game = new Game(username.trim());
+			Connector connector = new Connector(game);
+			game.startGame();
 			startActivity(intent);
 		}		
 	}

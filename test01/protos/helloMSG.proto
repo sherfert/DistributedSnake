@@ -1,0 +1,5 @@
+option java_package = "de.tud.tk3.distsnake.connectivity";
+message Hello {
+	required string name = 1;
+	optional string msg = 2 [default = "New Blood"];
+}
