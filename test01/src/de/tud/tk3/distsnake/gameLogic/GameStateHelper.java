@@ -16,8 +16,8 @@ public class GameStateHelper {
 	private static final int X_SNAKE_DEFAULT_VALUE_3 = 12;
 	private static final int Y_SNAKE_DEFAULT_VALUE = 10;
 	
-	private static final int WIDTH = 100;
-	private static final int HEIGHT = 100;
+	public static final int WIDTH = 100;
+	public static final int HEIGHT = 100;
 	
 	private static Random rand = new Random();
 

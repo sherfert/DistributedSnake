@@ -82,12 +82,15 @@ public class MainActivity extends Activity {
 			Game game = new Game(username.trim());
 			Connector connector = new Connector(game);
 			game.startGame();
+			
+			intent.putExtra("username", username);
 			startActivity(intent);
 		}		
 	}
 
 	public class TestPublishing implements Runnable {
 		
+		// TODO clean up tester methods
 
 		@Override
 		public void run() {
