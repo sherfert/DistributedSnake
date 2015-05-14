@@ -1,37 +1,29 @@
 package de.tud.tk3.distsnake.gui;
 
-import de.tud.tk3.distsnake.GameStatus.Coordinates;
-import de.tud.tk3.distsnake.GameStatus.GameState;
-import de.tud.tk3.distsnake.GameStatus.GameState.Orientation;
-import de.tud.tk3.distsnake.R;
-import de.tud.tk3.distsnake.R.id;
-import de.tud.tk3.distsnake.R.layout;
-import de.tud.tk3.distsnake.R.menu;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.DashPathEffect;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.DisplayMetrics;
-import android.view.Display;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import de.tud.tk3.distsnake.GameStatus.Coordinates;
+import de.tud.tk3.distsnake.GameStatus.GameState;
+import de.tud.tk3.distsnake.GameStatus.GameState.Orientation;
+import de.tud.tk3.distsnake.R;
+import de.tud.tk3.distsnake.gameLogic.GameStateHelper;
+import de.tud.tk3.distsnake.gameLogic.GameStateUpdateObserver;
 
-public class GameActivity extends Activity {
-
-	/**
-	 * Units for the game size. Both width and height.
-	 */
-	public static final int GAME_SIZE = 30;
+public class GameActivity extends Activity implements GameStateUpdateObserver {
 
 	private Canvas canvas;
 	private int windowSize;
@@ -39,11 +31,22 @@ public class GameActivity extends Activity {
 	private Paint goalPaint;
 	private Paint bgPaint;
 	private TextView currentPlayer;
+	private String username;
+
+	private Button upButton, downButton, rightButton, leftButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_game);
+
+		// Initialize fields
+		username = getIntent().getExtras().getString("username");
+		currentPlayer = (TextView) findViewById(R.id.gameActivity_textView_currentPlayer);
+		upButton = (Button) findViewById(R.id.gameActivity_button_up);
+		downButton = (Button) findViewById(R.id.gameActivity_button_down);
+		rightButton = (Button) findViewById(R.id.gameActivity_button_right);
+		leftButton = (Button) findViewById(R.id.gameActivity_button_left);
 
 		// Create Bitmap and Canvas
 		DisplayMetrics metrics = getResources().getDisplayMetrics();
@@ -52,10 +55,8 @@ public class GameActivity extends Activity {
 				Bitmap.Config.ARGB_8888);
 		canvas = new Canvas(bg);
 
-		currentPlayer = (TextView) findViewById(R.id.gameActivity_textView_currentPlayer);
-
 		// Integrate canvas into layout
-		LinearLayout ll = (LinearLayout) findViewById(R.id.canvas);
+		LinearLayout ll = (LinearLayout) findViewById(R.id.gameActivity_linearLayout_canvas);
 		ll.setBackground(new BitmapDrawable(getResources(), bg));
 		ll.setLayoutParams(new GridLayout.LayoutParams(new LayoutParams(
 				windowSize, windowSize)));
@@ -75,71 +76,122 @@ public class GameActivity extends Activity {
 		goalPaint.setColor(Color.parseColor("#FF0000"));
 		goalPaint.setStyle(Paint.Style.FILL);
 
-		// Mockup data TODO
+		// TODO Remove Mockup data
 		Coordinates s0 = Coordinates.newBuilder().setX(3).setY(5).build();
 		Coordinates s1 = Coordinates.newBuilder().setX(3).setY(6).build();
 		Coordinates s2 = Coordinates.newBuilder().setX(4).setY(6).build();
 		Coordinates goalCoordinates = Coordinates.newBuilder().setX(10)
 				.setY(12).build();
-		GameState gameState = GameState.newBuilder().addSnake(s0).addSnake(s1)
-				.addSnake(s2).setCurrentPlayer("Blah").addPlayers("Ilmi").addPlayers("Satia")
-				.addPlayers("Ment")
-				.addPlayers("Omar")
-				.addPlayers("Shin")
+		final GameState gameStateMockUp = GameState.newBuilder().addSnake(s0)
+				.addSnake(s1).addSnake(s2).setCurrentPlayer("Blah")
+				.addPlayers("Ilmi").addPlayers("Satia").addPlayers("Ment")
+				.addPlayers("Omar").addPlayers("Shin")
 				.addPlayers("Ahmed Malik Al Madun")
-				.addPlayers("Waris Manisatienrattana")
-				.setGoal(goalCoordinates).setOrient(Orientation.NORTH)
-				.setRemainSteps(1).build();
+				.addPlayers("Waris Manisatienrattana").setGoal(goalCoordinates)
+				.setOrient(Orientation.NORTH).setRemainSteps(1).build();
 
-		updateGameDisplay(gameState);
+		GameState gameState = GameStateHelper
+				.constructDefaultGameState(username);
 
+		onGameUpdate(gameState);
+
+		// TODO remove this
+		Thread t = new Thread() {
+			public void run() {
+				try {
+					Thread.sleep(3000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				onGameUpdate(gameStateMockUp);
+			}
+		};
+		t.start();
 	}
 
-	private void updateGameDisplay(GameState gameState) {
-		// Background
-		canvas.drawRect(0, 0, windowSize, windowSize, bgPaint);
-		// Snake
-		for (Coordinates snakePart : gameState.getSnakeList()) {
-			canvas.drawCircle(snakePart.getX() * getUnitSize(windowSize),
-					snakePart.getY() * getUnitSize(windowSize),
-					getUnitSize(windowSize) / 2, snakePaint);
-		}
-		// Goal
-		canvas.drawCircle(gameState.getGoal().getX() * getUnitSize(windowSize),
-				gameState.getGoal().getY() * getUnitSize(windowSize),
-				getUnitSize(windowSize) / 2, goalPaint);
+	/**
+	 * Called when the game is over. TODO call this somewhere.
+	 */
+	public void onGameLost() {
+		new AlertDialog.Builder(this)
+				.setTitle(R.string.gameActivity_gamelost_title)
+				.setPositiveButton(android.R.string.yes, null)
+				.setIcon(android.R.drawable.ic_dialog_alert).show();
 
-		String namesToDisplay = "<h1><b>"
-				+ gameState.getCurrentPlayer() + "</b></h1>";
-		String playerList= "";
-		
-		for(String player : gameState.getPlayersList())
-			playerList+= player + ", ";
-		
-
-		currentPlayer.setText(Html.fromHtml(namesToDisplay + playerList));
+		finish();
 	}
 
+	@Override
+	public void onGameUpdate(final GameState gameState) {
+		final String namesToDisplay = "<h1><b>" + gameState.getPlayers(0)
+				+ "</b></h1>";
+		final StringBuilder playerList = new StringBuilder();
+
+		for (int i = 1; i < gameState.getPlayersCount(); i++)
+			playerList.append(gameState.getPlayers(i)).append(", ");
+
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				currentPlayer.setText(Html.fromHtml(namesToDisplay
+						+ playerList.toString()));
+
+				// Background
+				canvas.drawRect(0, 0, windowSize, windowSize, bgPaint);
+				// Snake
+				for (Coordinates snakePart : gameState.getSnakeList()) {
+					canvas.drawCircle(snakePart.getX()
+							* getUnitSize(windowSize), snakePart.getY()
+							* getUnitSize(windowSize),
+							getUnitSize(windowSize) / 2, snakePaint);
+				}
+				// Goal
+				canvas.drawCircle(gameState.getGoal().getX()
+						* getUnitSize(windowSize), gameState.getGoal().getY()
+						* getUnitSize(windowSize), getUnitSize(windowSize) / 2,
+						goalPaint);
+
+				// Check if we're the current player
+				if (username.equals(gameState.getCurrentPlayer())) {
+					// Enable buttons
+					upButton.setEnabled(true);
+					downButton.setEnabled(true);
+					rightButton.setEnabled(true);
+					leftButton.setEnabled(true);
+				} else {
+					// Disable buttons
+					upButton.setEnabled(false);
+					downButton.setEnabled(false);
+					rightButton.setEnabled(false);
+					leftButton.setEnabled(false);
+				}
+			}
+		});
+	}
+
+	// TODO implement backButton functionality
+
+	// XXX Add border around actually used part of canvas
+	/**
+	 * Return the size of one snake unit in dp.
+	 */
 	private int getUnitSize(int windowWidth) {
-		return (int) (windowWidth / (GAME_SIZE));
+		return (int) (windowWidth / (GameStateHelper.WIDTH));
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
+	public void buttonPressed(View view) {
+		// TODO
+		if (view == upButton) {
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
+		} else if (view == downButton) {
+
+		} else if (view == rightButton) {
+
+		} else if (view == leftButton) {
+
+		} else {
+			throw new RuntimeException("fuck all this!");
 		}
-		return super.onOptionsItemSelected(item);
 	}
 }
