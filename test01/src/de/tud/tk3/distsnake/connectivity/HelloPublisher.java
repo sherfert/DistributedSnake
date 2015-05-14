@@ -22,6 +22,7 @@ public class HelloPublisher extends TypedPublisher implements HelloObserver {
 //		}else{
 			try{
 				Hello msg = Hello.newBuilder().setName(username).setMsg("I am here").build();
+				
 				this.sendObject(msg);
 				System.out.println("Sent the hello message");
 				return true;
