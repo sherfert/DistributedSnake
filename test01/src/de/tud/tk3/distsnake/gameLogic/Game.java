@@ -113,4 +113,10 @@ public class Game {
 			}
 		}
 	}
+	
+	public void onGameStateReceived(GameState state){
+		synchronized (syncObject) {
+			gameState = state;			
+		}
+	}
 }
