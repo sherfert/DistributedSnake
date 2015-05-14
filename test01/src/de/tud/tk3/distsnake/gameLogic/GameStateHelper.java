@@ -19,6 +19,8 @@ public class GameStateHelper {
 	public static final int HEIGHT = 30;
 	public static final int DEFAULT_STEPS = 20;
 	
+	public static final int DEFAULT_STEP_TIME_MS = 500;
+	
 	private static Random rand = new Random();
 	/* TODO there are two invocations of that method. 
 	 * There should be only one */

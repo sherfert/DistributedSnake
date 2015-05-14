@@ -34,8 +34,8 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 	private Paint bgPaint;
 	private TextView currentPlayer;
 	private String username;
-	
-	//private static final MAX_WIDTH = 300
+
+	// private static final MAX_WIDTH = 300
 
 	private Button upButton, downButton, rightButton, leftButton;
 
@@ -65,8 +65,8 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 		// Integrate canvas into layout
 		LinearLayout ll = (LinearLayout) findViewById(R.id.gameActivity_linearLayout_canvas);
 		ll.setBackground(new BitmapDrawable(getResources(), bg));
-		GridLayout.LayoutParams params = new GridLayout.LayoutParams(new LayoutParams(
-				maxWindowSize, maxWindowSize));
+		GridLayout.LayoutParams params = new GridLayout.LayoutParams(
+				new LayoutParams(maxWindowSize, maxWindowSize));
 		params.setGravity(Gravity.CENTER);
 		ll.setLayoutParams(params);
 
@@ -85,38 +85,41 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 		goalPaint.setColor(Color.parseColor("#FF0000"));
 		goalPaint.setStyle(Paint.Style.FILL);
 
+		// Register GUI as gamestate observer
+		Game.getInstance().subscribeGameUpdateObserver(this);
+
 		// TODO Remove Mockup data
-		Coordinates s0 = Coordinates.newBuilder().setX(3).setY(5).build();
-		Coordinates s1 = Coordinates.newBuilder().setX(3).setY(6).build();
-		Coordinates s2 = Coordinates.newBuilder().setX(4).setY(6).build();
-		Coordinates goalCoordinates = Coordinates.newBuilder().setX(10)
-				.setY(12).build();
-		final GameState gameStateMockUp = GameState.newBuilder().addSnake(s0)
-				.addSnake(s1).addSnake(s2).setCurrentPlayer("Blah")
-				.addPlayers("Ilmi").addPlayers("Satia").addPlayers("Ment")
-				.addPlayers("Omar").addPlayers("Shin")
-				.addPlayers("Ahmed Malik Al Madun")
-				.addPlayers("Waris Manisatienrattana").setGoal(goalCoordinates)
-				.setOrient(Orientation.NORTH).setRemainSteps(1).build();
-
-		GameState gameState = GameStateHelper
-				.constructDefaultGameState(username);
-
-		onGameUpdate(gameState);
+//		Coordinates s0 = Coordinates.newBuilder().setX(3).setY(5).build();
+//		Coordinates s1 = Coordinates.newBuilder().setX(3).setY(6).build();
+//		Coordinates s2 = Coordinates.newBuilder().setX(4).setY(6).build();
+//		Coordinates goalCoordinates = Coordinates.newBuilder().setX(10)
+//				.setY(12).build();
+//		final GameState gameStateMockUp = GameState.newBuilder().addSnake(s0)
+//				.addSnake(s1).addSnake(s2).setCurrentPlayer("Blah")
+//				.addPlayers("Ilmi").addPlayers("Satia").addPlayers("Ment")
+//				.addPlayers("Omar").addPlayers("Shin")
+//				.addPlayers("Ahmed Malik Al Madun")
+//				.addPlayers("Waris Manisatienrattana").setGoal(goalCoordinates)
+//				.setOrient(Orientation.NORTH).setRemainSteps(1).build();
+//
+//		GameState gameState = GameStateHelper
+//				.constructDefaultGameState(username);
+//
+//		onGameUpdate(gameState);
 
 		// TODO remove this
-		Thread t = new Thread() {
-			public void run() {
-				try {
-					Thread.sleep(3000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				onGameUpdate(gameStateMockUp);
-			}
-		};
-		t.start();
+		// Thread t = new Thread() {
+		// public void run() {
+		// try {
+		// Thread.sleep(3000);
+		// } catch (InterruptedException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		// onGameUpdate(gameStateMockUp);
+		// }
+		// };
+		// t.start();
 	}
 
 	/**
@@ -157,13 +160,13 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 				}
 				// Goal
 				canvas.drawCircle(gameState.getGoal().getX()
-						* getUnitSize(maxWindowSize), gameState.getGoal().getY()
-						* getUnitSize(maxWindowSize), getUnitSize(maxWindowSize) / 2,
-						goalPaint);
+						* getUnitSize(maxWindowSize), gameState.getGoal()
+						.getY() * getUnitSize(maxWindowSize),
+						getUnitSize(maxWindowSize) / 2, goalPaint);
 
 				// Check if we're the current player
 				if (Game.getInstance().isCurrentPlayer()) {
-				//if (username.equals(gameState.getCurrentPlayer())) {
+					// if (username.equals(gameState.getCurrentPlayer())) {
 					// Enable buttons
 					upButton.setEnabled(true);
 					downButton.setEnabled(true);
@@ -176,6 +179,10 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 					rightButton.setEnabled(false);
 					leftButton.setEnabled(false);
 				}
+
+				// Redraw
+				LinearLayout ll = (LinearLayout) findViewById(R.id.gameActivity_linearLayout_canvas);
+				ll.invalidate();
 			}
 		});
 	}

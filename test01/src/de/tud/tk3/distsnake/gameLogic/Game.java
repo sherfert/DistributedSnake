@@ -2,6 +2,8 @@ package de.tud.tk3.distsnake.gameLogic;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.provider.SyncStateContract.Helpers;
 import de.tud.tk3.distsnake.GameStatus.GameState.Builder;
@@ -56,6 +58,19 @@ public class Game {
 		if (isFirstPlayer) {
 			createDefaultGameState();
 			isCurrentPlayer = true;
+
+			// TODO move this in a general place
+			TimerTask task = new TimerTask() {
+				@Override
+				public void run() {
+					updateGameState();
+				}
+			};
+			Timer timer = new Timer();
+			timer.scheduleAtFixedRate(task,
+					GameStateHelper.DEFAULT_STEP_TIME_MS,
+					GameStateHelper.DEFAULT_STEP_TIME_MS);
+			//task.cancel()
 		} else {
 			helloObserver.onGameStart(player);
 		}
@@ -126,7 +141,8 @@ public class Game {
 		if (gameState.getGoal().getX() == newHead.getX()
 				&& gameState.getGoal().getY() == newHead.getY()) {
 			// Set a new goal
-			Coordinates newGoal = GameStateHelper.createRandomGoal(gameBuilder.buildPartial());
+			Coordinates newGoal = GameStateHelper.createRandomGoal(gameBuilder
+					.buildPartial());
 			gameBuilder.setGoal(newGoal);
 		} else {
 			// Remove the tail
@@ -135,7 +151,7 @@ public class Game {
 
 		// Decrease to remaining steps
 		gameBuilder.setRemainSteps(gameBuilder.getRemainSteps() - 1);
-		
+
 		// Set the new game state
 		synchronized (syncObject) {
 			this.gameState = gameBuilder.build();
@@ -186,7 +202,7 @@ public class Game {
 	public void leftPressed() {
 		if (gameState.getOrient() == Orientation.NORTH
 				|| gameState.getOrient() == Orientation.SOUTH) {
-			newOrientation = Orientation.EAST;
+			newOrientation = Orientation.WEST;
 		}
 	}
 
@@ -196,7 +212,7 @@ public class Game {
 	public void rightPressed() {
 		if (gameState.getOrient() == Orientation.NORTH
 				|| gameState.getOrient() == Orientation.SOUTH) {
-			newOrientation = Orientation.WEST;
+			newOrientation = Orientation.EAST;
 		}
 	}
 
@@ -229,35 +245,36 @@ public class Game {
 			}
 		}
 	}
-	
-	public void onGameStateReceived(GameState state){
+
+	public void onGameStateReceived(GameState state) {
 		synchronized (syncObject) {
 			gameState = state;
 		}
-		
-		if(isValidGameState(state)){
-			if(state.getRemainSteps() == 0 && isNextPlayer()){
+
+		if (isValidGameState(state)) {
+			if (state.getRemainSteps() == 0 && isNextPlayer()) {
 				isCurrentPlayer = true;
-				gameState = gameState.toBuilder().setRemainSteps(GameStateHelper.DEFAULT_STEPS).build();
+				gameState = gameState.toBuilder()
+						.setRemainSteps(GameStateHelper.DEFAULT_STEPS).build();
 				String oldPlayer = gameState.toBuilder().getPlayers(0);
-				//TODO not finished updating players list and taking turn
+				// TODO not finished updating players list and taking turn
 			}
-			
+
 		} else {
-			//TODO end game
+			// TODO end game
 		}
-		
+
 	}
 
 	private boolean isNextPlayer() {
 		List<String> playerList = gameState.getPlayersList();
-		//TODO Be careful not to check for an inexistent player in an invalid position
+		// TODO Be careful not to check for an inexistent player in an invalid
+		// position
 		return player.equals(playerList.get(1));
 	}
 
 	public boolean isCurrentPlayer() {
 		return isCurrentPlayer;
 	}
-	
-	
+
 }
