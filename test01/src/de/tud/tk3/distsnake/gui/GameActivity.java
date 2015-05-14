@@ -21,6 +21,7 @@ import de.tud.tk3.distsnake.GameStatus.Coordinates;
 import de.tud.tk3.distsnake.GameStatus.GameState;
 import de.tud.tk3.distsnake.GameStatus.GameState.Orientation;
 import de.tud.tk3.distsnake.R;
+import de.tud.tk3.distsnake.gameLogic.Game;
 import de.tud.tk3.distsnake.gameLogic.GameStateHelper;
 import de.tud.tk3.distsnake.gameLogic.GameStateUpdateObserver;
 
@@ -188,16 +189,21 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 		return (int) (windowWidth / (GameStateHelper.WIDTH));
 	}
 
+	/**
+	 * Called when a button was pressed. Delegates the control to the Game.
+	 * 
+	 * @param view
+	 *            the pressed button.
+	 */
 	public void buttonPressed(View view) {
-		// TODO
 		if (view == upButton) {
-
+			Game.getInstance().upPressed();
 		} else if (view == downButton) {
-
+			Game.getInstance().downPressed();
 		} else if (view == rightButton) {
-
+			Game.getInstance().rightPressed();
 		} else if (view == leftButton) {
-
+			Game.getInstance().leftPressed();
 		} else {
 			throw new RuntimeException("fuck all this!");
 		}
