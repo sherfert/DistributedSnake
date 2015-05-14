@@ -10,6 +10,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
@@ -26,12 +27,14 @@ import de.tud.tk3.distsnake.gameLogic.GameStateUpdateObserver;
 public class GameActivity extends Activity implements GameStateUpdateObserver {
 
 	private Canvas canvas;
-	private int windowSize;
+	private int maxWindowSize;
 	private Paint snakePaint;
 	private Paint goalPaint;
 	private Paint bgPaint;
 	private TextView currentPlayer;
 	private String username;
+	
+	//private static final MAX_WIDTH = 300
 
 	private Button upButton, downButton, rightButton, leftButton;
 
@@ -50,22 +53,27 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 
 		// Create Bitmap and Canvas
 		DisplayMetrics metrics = getResources().getDisplayMetrics();
-		windowSize = metrics.widthPixels;
-		Bitmap bg = Bitmap.createBitmap(metrics, windowSize, windowSize,
+		maxWindowSize = metrics.widthPixels;
+		double maxHeight = metrics.heightPixels * 0.50;
+		if (maxWindowSize > maxHeight)
+			maxWindowSize = (int) maxHeight;
+		Bitmap bg = Bitmap.createBitmap(metrics, maxWindowSize, maxWindowSize,
 				Bitmap.Config.ARGB_8888);
 		canvas = new Canvas(bg);
 
 		// Integrate canvas into layout
 		LinearLayout ll = (LinearLayout) findViewById(R.id.gameActivity_linearLayout_canvas);
 		ll.setBackground(new BitmapDrawable(getResources(), bg));
-		ll.setLayoutParams(new GridLayout.LayoutParams(new LayoutParams(
-				windowSize, windowSize)));
+		GridLayout.LayoutParams params = new GridLayout.LayoutParams(new LayoutParams(
+				maxWindowSize, maxWindowSize));
+		params.setGravity(Gravity.CENTER);
+		ll.setLayoutParams(params);
 
 		// Paint for the backgroud
 		bgPaint = new Paint();
 		bgPaint.setColor(Color.parseColor("#DADADA"));
 		bgPaint.setStyle(Paint.Style.FILL);
-		canvas.drawRect(0, 0, windowSize, windowSize, bgPaint);
+		canvas.drawRect(0, 0, maxWindowSize, maxWindowSize, bgPaint);
 
 		// Paint for the backgroud
 		snakePaint = new Paint();
@@ -138,18 +146,18 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 						+ playerList.toString()));
 
 				// Background
-				canvas.drawRect(0, 0, windowSize, windowSize, bgPaint);
+				canvas.drawRect(0, 0, maxWindowSize, maxWindowSize, bgPaint);
 				// Snake
 				for (Coordinates snakePart : gameState.getSnakeList()) {
 					canvas.drawCircle(snakePart.getX()
-							* getUnitSize(windowSize), snakePart.getY()
-							* getUnitSize(windowSize),
-							getUnitSize(windowSize) / 2, snakePaint);
+							* getUnitSize(maxWindowSize), snakePart.getY()
+							* getUnitSize(maxWindowSize),
+							getUnitSize(maxWindowSize) / 2, snakePaint);
 				}
 				// Goal
 				canvas.drawCircle(gameState.getGoal().getX()
-						* getUnitSize(windowSize), gameState.getGoal().getY()
-						* getUnitSize(windowSize), getUnitSize(windowSize) / 2,
+						* getUnitSize(maxWindowSize), gameState.getGoal().getY()
+						* getUnitSize(maxWindowSize), getUnitSize(maxWindowSize) / 2,
 						goalPaint);
 
 				// Check if we're the current player
