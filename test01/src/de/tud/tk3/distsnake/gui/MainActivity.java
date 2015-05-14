@@ -66,7 +66,6 @@ public class MainActivity extends Activity {
 	Node node;
 	TypedPublisher fooPub;
 	TypedSubscriber fooSub;
-	Game game;
 	
 	public void startGame(View view) {
 		Intent intent = new Intent(this, GameActivity.class);
@@ -81,7 +80,7 @@ public class MainActivity extends Activity {
 			    .show();
 		} else {
 			
-			game.startGame();
+			Game.getInstance().startGame();
 			
 			intent.putExtra("username", username);
 			startActivity(intent);
@@ -169,12 +168,14 @@ public class MainActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-//		TODO remove unnecessary code
-		game = new Game("Ment");
+
+		// TODO actual name
+		Game.getInstance().setPlayer("Ment");
 		WifiManager wifi2 = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-		Connector connector = new Connector(game, wifi2);
+		Connector connector = new Connector(wifi2);
 //		game.startGame();
 		
+//		TODO remove unnecessary code
 		if(true)return;
 
 //		tv = new TextView(this);

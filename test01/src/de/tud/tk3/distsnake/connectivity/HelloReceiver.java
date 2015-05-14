@@ -12,14 +12,12 @@ import de.tud.tk3.distsnake.connectivity.HelloMSG.Hello;
 public class HelloReceiver implements ITypedReceiver {
 	
 	MainActivity mainActivity;
-	Game game;
 		
-	public HelloReceiver(Game game) {
-		this.game = game;
+	public HelloReceiver() {
 	}
 
 	public void receiveObject(Object object, Message msg) {
 		final Hello helloMsg = (Hello) object;
-		game.onHello(helloMsg.getName());
+		Game.getInstance().onHello(helloMsg.getName());
 	}
 }
