@@ -22,6 +22,11 @@ public class Game {
 	}
 	
 	public void startGame(){
+		boolean isFirstPlayer = helloObserver.onGameStart(player);
+		if(isFirstPlayer){
+			
+		}
+		
 		isCurrentPlayer = !helloObserver.onGameStart(player);
 		if(isCurrentPlayer){
 			createDefaultGameState();
