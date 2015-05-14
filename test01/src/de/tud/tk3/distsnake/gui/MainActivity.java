@@ -79,10 +79,8 @@ public class MainActivity extends Activity {
 			    .setIcon(android.R.drawable.ic_dialog_alert)
 			    .show();
 		} else {
-			Game game = new Game(username.trim());
-			WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-			Connector connector = new Connector(game, wifi);
-			game.startGame();
+			
+			Game.getInstance().startGame();
 			
 			intent.putExtra("username", username);
 			startActivity(intent);
@@ -97,7 +95,7 @@ public class MainActivity extends Activity {
 		public void run() {
 			String message = "This is foo from android";
 
-			while (testPublishing != null) {
+//			while (testPublishing != null) {
 //				Message msg = new Message();
 //				msg.putMeta("position", "34");
 //				msg.setData(message.getBytes());
@@ -106,9 +104,12 @@ public class MainActivity extends Activity {
 				Coordinates sCord1 = Coordinates.newBuilder().setX(10).setY(15).build();
 				Coordinates sCord2 = Coordinates.newBuilder().setX(11).setY(15).build();
                 GameState chatMsg;
-				try {
-				chatMsg= GameState.newBuilder().setGoal(gCord).addSnake(sCord1).addSnake(sCord2).setOrient(Orientation.EAST).setRemainSteps(10).build();
+				
+                try {
+				Thread.sleep(3000);
+                chatMsg= GameState.newBuilder().setGoal(gCord).addSnake(sCord1).addSnake(sCord2).setOrient(Orientation.EAST).setRemainSteps(10).build();
 				fooPub.sendObject(chatMsg);
+				System.out.println("Message sent " + chatMsg);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -123,7 +124,7 @@ public class MainActivity extends Activity {
 						//tv.setText(tv.getText() + "o");
 					}
 				});
-			}
+//			}
 		}
 	}
 
@@ -150,6 +151,7 @@ public class MainActivity extends Activity {
 			final GameState chatMsg = (GameState) object; // check for
 														// um.s11n.type if there
 														// are different types
+			System.out.println("Received GameState Message ");
 			MainActivity.this.runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
@@ -166,6 +168,14 @@ public class MainActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		// TODO actual name
+		Game.getInstance().setPlayer("Ment");
+		WifiManager wifi2 = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+		Connector connector = new Connector(wifi2);
+//		game.startGame();
+		
+//		TODO remove unnecessary code
 		if(true)return;
 
 //		tv = new TextView(this);

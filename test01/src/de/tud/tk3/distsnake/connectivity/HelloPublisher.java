@@ -8,28 +8,28 @@ import de.tud.tk3.distsnake.gameLogic.HelloObserver;
 
 public class HelloPublisher extends TypedPublisher implements HelloObserver {
 
-	public HelloPublisher(Game game) {
+	public HelloPublisher() {
 		super("hello");
-		game.setHelloObserver(this);
-		// TODO Auto-generated constructor stub
+		Game.getInstance().setHelloObserver(this);
 	}
 
+	/**
+	 * onGameStart(String username) returns false denoting that this is the only player
+	 */
 	@Override
 	public boolean onGameStart(String username) {
 		System.out.println("Entered onGameStart");
-//		if(this.getSubscribers().isEmpty()){
-//			return false;
-//		}else{
+		if(this.getSubscribers().isEmpty()){
+			return false;
+		}else{
 			try{
 				Hello msg = Hello.newBuilder().setName(username).setMsg("I am here").build();
 				this.sendObject(msg);
 				System.out.println("Sent the hello message");
-				return true;
 			} catch(Exception e) {
 				e.printStackTrace();
-				return false;
 			}
-			
-//		}
+			return true;
+		}
 	}
 }

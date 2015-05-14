@@ -19,13 +19,11 @@ import de.tud.tk3.distsnake.gui.MainActivity.TestTypedReceiver;
 
 public class Connector {
 	
-	private Game game;
 	private Discovery disc;
 	private Node node;
 	
 	
-	public Connector(Game game,WifiManager wifi) {
-		this.game = game;
+	public Connector(WifiManager wifi) {
 //		WifiManager wifi = (WifiManager) mainActivity.getSystemService(Context.WIFI_SERVICE);
 		if (wifi != null) {
 			MulticastLock mcLock = wifi.createMulticastLock("mylock");
@@ -42,18 +40,18 @@ public class Connector {
 		node = new Node();
 		disc.add(node);
 
-		HelloPublisher helloPublisher = new HelloPublisher(game);
-//		GameStatePublisher gameStatePublisher = new GameStatePublisher(game);
+		HelloPublisher helloPublisher = new HelloPublisher();
+//		GameStatePublisher gameStatePublisher = new GameStatePublisher();
 		
 		node.addPublisher(helloPublisher);
 //		node.addPublisher(gameStatePublisher);
 		
-//		GameStateReceiver gameStateReceiver = new GameStateReceiver(game);
+//		GameStateReceiver gameStateReceiver = new GameStateReceiver();
 //		TypedSubscriber gameSub = new TypedSubscriber("game");
 //		gameSub.setReceiver(gameStateReceiver);
 //		gameSub.registerType(GameState.class);
 		
-		HelloReceiver helloReceiver = new HelloReceiver(game);
+		HelloReceiver helloReceiver = new HelloReceiver();
 		TypedSubscriber helloSub = new TypedSubscriber("hello");
 		helloSub.setReceiver(helloReceiver);
 		helloSub.registerType(Hello.class);
