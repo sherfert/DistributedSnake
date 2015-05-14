@@ -17,19 +17,19 @@ public class HelloPublisher extends TypedPublisher implements HelloObserver {
 	 * onGameStart(String username) returns false denoting that this is the only player
 	 */
 	@Override
-	public boolean onGameStart(String username) {
+	public void onGameStart(String username) {
 		System.out.println("Entered onGameStart");
-		if(this.getSubscribers().isEmpty()){
-			return false;
-		}else{
-			try{
-				Hello msg = Hello.newBuilder().setName(username).setMsg("I am here").build();
-				this.sendObject(msg);
-				System.out.println("Sent the hello message");
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
-			return true;
+		try{
+			Hello msg = Hello.newBuilder().setName(username).setMsg("I am here").build();
+			this.sendObject(msg);
+			System.out.println("Sent the hello message");
+		} catch(Exception e) {
+			e.printStackTrace();
 		}
+	}
+	
+	@Override
+	public boolean isFirstPlayer(){
+		return this.getSubscribers().isEmpty();
 	}
 }
