@@ -80,7 +80,8 @@ public class MainActivity extends Activity {
 			    .show();
 		} else {
 			Game game = new Game(username.trim());
-			Connector connector = new Connector(game);
+			WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+			Connector connector = new Connector(game, wifi);
 			game.startGame();
 			startActivity(intent);
 		}		
@@ -167,7 +168,7 @@ public class MainActivity extends Activity {
 //		tv = new TextView(this);
 //		tv.setText("");
 		//setContentView(tv);
-
+		
 		WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 		if (wifi != null) {
 			MulticastLock mcLock = wifi.createMulticastLock("mylock");

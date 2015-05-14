@@ -16,12 +16,20 @@ public class HelloPublisher extends TypedPublisher implements HelloObserver {
 
 	@Override
 	public boolean onGameStart(String username) {
-		if(this.getSubscribers().isEmpty()){
-			return false;
-		}else{
-			Hello msg = Hello.newBuilder().setName(username).setMsg("I am here").build();
-			this.sendObject(msg);
-			return true;
-		}
+		System.out.println("Entered onGameStart");
+//		if(this.getSubscribers().isEmpty()){
+//			return false;
+//		}else{
+			try{
+				Hello msg = Hello.newBuilder().setName(username).setMsg("I am here").build();
+				this.sendObject(msg);
+				System.out.println("Sent the hello message");
+				return true;
+			} catch(Exception e) {
+				e.printStackTrace();
+				return false;
+			}
+			
+//		}
 	}
 }

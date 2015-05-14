@@ -6,10 +6,16 @@ import org.umundo.core.Discovery.DiscoveryType;
 import org.umundo.s11n.TypedPublisher;
 import org.umundo.s11n.TypedSubscriber;
 
+import android.app.Activity;
+import android.content.Context;
+import android.net.wifi.WifiManager;
+import android.net.wifi.WifiManager.MulticastLock;
+import android.util.Log;
 import de.tud.tk3.distsnake.GameStatus.GameState;
 import de.tud.tk3.distsnake.connectivity.HelloMSG.Hello;
 import de.tud.tk3.distsnake.gameLogic.Game;
 import de.tud.tk3.distsnake.gui.MainActivity.TestTypedReceiver;
+
 
 public class Connector {
 	
@@ -18,8 +24,17 @@ public class Connector {
 	private Node node;
 	
 	
-	public Connector(Game game) {
+	public Connector(Game game,WifiManager wifi) {
 		this.game = game;
+//		WifiManager wifi = (WifiManager) mainActivity.getSystemService(Context.WIFI_SERVICE);
+		if (wifi != null) {
+			MulticastLock mcLock = wifi.createMulticastLock("mylock");
+			mcLock.acquire();
+			// mcLock.release();
+		} else {
+			Log.v("android-umundo", "Cannot get WifiManager");
+		}
+
 		System.loadLibrary("umundoNativeJava_d");
 
 		disc = new Discovery(DiscoveryType.MDNS);
@@ -28,19 +43,21 @@ public class Connector {
 		disc.add(node);
 
 		HelloPublisher helloPublisher = new HelloPublisher(game);
-		GameStatePublisher gameStatePublisher = new GameStatePublisher(game);
+//		GameStatePublisher gameStatePublisher = new GameStatePublisher(game);
 		
 		node.addPublisher(helloPublisher);
-		node.addPublisher(gameStatePublisher);
+//		node.addPublisher(gameStatePublisher);
+		
+//		GameStateReceiver gameStateReceiver = new GameStateReceiver(game);
+//		TypedSubscriber gameSub = new TypedSubscriber("game");
+//		gameSub.setReceiver(gameStateReceiver);
+//		gameSub.registerType(GameState.class);
 		
 		HelloReceiver helloReceiver = new HelloReceiver(game);
-		GameStateReceiver gameStateReceiver = new GameStateReceiver(game);
 		TypedSubscriber helloSub = new TypedSubscriber("hello");
-		TypedSubscriber gameSub = new TypedSubscriber("game");
 		helloSub.setReceiver(helloReceiver);
-		gameSub.setReceiver(gameStateReceiver);
-		gameSub.registerType(GameState.class);
 		helloSub.registerType(Hello.class);
+		node.addSubscriber(helloSub);
 	}
 	
 }
