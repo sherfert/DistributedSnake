@@ -3,7 +3,9 @@ package de.tud.tk3.distsnake.gameLogic;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.tud.tk3.distsnake.GameStatus.Coordinates;
 import de.tud.tk3.distsnake.GameStatus.GameState;
+import de.tud.tk3.distsnake.GameStatus.GameState.Builder;
 import de.tud.tk3.distsnake.GameStatus.GameState.Orientation;
 
 public class Game {
@@ -91,13 +93,52 @@ public class Game {
 	}
 
 	/**
-	 * Updates the game state and notifies all observers. TODO Should be called
-	 * in intervals somewhere.
+	 * Updates the game state and notifies all observers.
+	 * 
+	 * TODO Should be called in intervals somewhere.
+	 * 
+	 * TODO synchronize
 	 */
 	private void updateGameState() {
 		// TODO
-		// this.gameState = state;
-		// notifyOnGameUpdate();
+		Builder gameBuilder = gameState.toBuilder();
+		// Set the new orientation
+		gameBuilder.setOrient(newOrientation);
+		// Move the snake ...
+
+		// Update all observers
+		notifyOnGameUpdate(gameState);
+
+		// Validate state
+		if (!isValidGameState(gameState)) {
+			// TODO end the game
+		}
+	}
+
+	/**
+	 * Checks a game state for validity (game over or not).
+	 * 
+	 * @param state
+	 *            the state
+	 * @return if the state is valid.
+	 */
+	private boolean isValidGameState(GameState state) {
+		Coordinates head = state.getSnake(0);
+
+		// The head should be inside of the game field
+		if (head.getX() < 0 || head.getY() < 0
+				|| head.getX() >= GameStateHelper.WIDTH
+				|| head.getY() >= GameStateHelper.HEIGHT) {
+			return false;
+		}
+		// The position of the head should be nowhere in the remaining snake
+		for(int i = 1; i < state.getSnakeCount(); i++) {
+			if(head.equals(state.getSnake(i))) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**
