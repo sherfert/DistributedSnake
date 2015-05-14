@@ -2,6 +2,7 @@ package de.tud.tk3.distsnake.gameLogic;
 
 import java.util.ArrayList;
 import java.util.List;
+import de.tud.tk3.distsnake.GameStatus.GameState.Builder;
 
 import de.tud.tk3.distsnake.GameStatus.Coordinates;
 import de.tud.tk3.distsnake.GameStatus.GameState;
@@ -30,6 +31,8 @@ public class Game {
 	private HelloObserver helloObserver;
 	private GameState gameState;
 	private boolean isCurrentPlayer;
+
+	private Object syncObject = new Object();
 	private String player;
 
 	/**
@@ -49,15 +52,12 @@ public class Game {
 	// TODO this must make sure, that nothing remains from an old game,
 	// i.e. clean up old state
 	public void startGame() {
-		boolean isFirstPlayer = helloObserver.onGameStart(player);
+		boolean isFirstPlayer = helloObserver.isFirstPlayer();
 		if (isFirstPlayer) {
-
-		}
-		isCurrentPlayer = !helloObserver.onGameStart(player);
-		if (isCurrentPlayer) {
 			createDefaultGameState();
+			isCurrentPlayer = true;
 		} else {
-			// TODO Wait until his turn
+			helloObserver.onGameStart(player);
 		}
 	}
 
@@ -181,9 +181,13 @@ public class Game {
 		}
 	}
 
-	public void onHello(String msgName) {
-		// TODO to be implemented
-		System.out.println(player + ": Hello received\t" + msgName);
+	public void onHello(String playerName) {
+		System.out.println(player + ": Hello received\t" + playerName);
+		synchronized (syncObject) {
+			if (isCurrentPlayer) {
+				Builder gameStateBuilder = gameState.toBuilder();
+				gameState = gameStateBuilder.addPlayers(playerName).build();
+			}
+		}
 	}
-
 }
