@@ -6,7 +6,6 @@ import de.tud.tk3.distsnake.GameStatus.GameState.Builder;
 
 import de.tud.tk3.distsnake.GameStatus.Coordinates;
 import de.tud.tk3.distsnake.GameStatus.GameState;
-import de.tud.tk3.distsnake.GameStatus.GameState.Builder;
 import de.tud.tk3.distsnake.GameStatus.GameState.Orientation;
 
 public class Game {
@@ -96,11 +95,8 @@ public class Game {
 	 * Updates the game state and notifies all observers.
 	 * 
 	 * TODO Should be called in intervals somewhere.
-	 * 
-	 * TODO synchronize
 	 */
 	private void updateGameState() {
-		// TODO
 		Builder gameBuilder = gameState.toBuilder();
 
 		// Set the new orientation
@@ -128,7 +124,9 @@ public class Game {
 		// Check if the goal was eaten
 		if (gameState.getGoal().getX() == newHead.getX()
 				&& gameState.getGoal().getY() == newHead.getY()) {
-			// TODO
+			// Set a new goal
+			Coordinates newGoal = GameStateHelper.createRandomGoal(gameBuilder.buildPartial());
+			gameBuilder.setGoal(newGoal);
 		} else {
 			// Remove the tail
 			gameBuilder.removeSnake(gameBuilder.getSnakeCount() - 1);
@@ -136,6 +134,11 @@ public class Game {
 
 		// Decrease to remaining steps
 		gameBuilder.setRemainSteps(gameBuilder.getRemainSteps() - 1);
+		
+		// Set the new game state
+		synchronized (syncObject) {
+			this.gameState = gameBuilder.build();
+		}
 
 		// Update all observers
 		notifyOnGameUpdate(gameState);
