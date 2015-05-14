@@ -184,7 +184,7 @@ public class Game {
 	public void onHello(String playerName) {
 		System.out.println(player + ": Hello received\t" + playerName);
 		synchronized (syncObject) {
-			if (isCurrentPlayer) {
+			if (isCurrentPlayer()) {
 				Builder gameStateBuilder = gameState.toBuilder();
 				gameState = gameStateBuilder.addPlayers(playerName).build();
 			}
@@ -192,8 +192,17 @@ public class Game {
 	}
 	
 	public void onGameStateReceived(GameState state){
+		if(isValidGameState(state)){
+			
+		}
 		synchronized (syncObject) {
-			gameState = state;			
+			gameState = state;
 		}
 	}
+
+	public boolean isCurrentPlayer() {
+		return isCurrentPlayer;
+	}
+	
+	
 }
