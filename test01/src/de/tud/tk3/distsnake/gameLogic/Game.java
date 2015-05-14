@@ -2,8 +2,9 @@ package de.tud.tk3.distsnake.gameLogic;
 
 import java.util.ArrayList;
 import java.util.List;
-import de.tud.tk3.distsnake.GameStatus.GameState.Builder;
 
+import android.provider.SyncStateContract.Helpers;
+import de.tud.tk3.distsnake.GameStatus.GameState.Builder;
 import de.tud.tk3.distsnake.GameStatus.Coordinates;
 import de.tud.tk3.distsnake.GameStatus.GameState;
 import de.tud.tk3.distsnake.GameStatus.GameState.Builder;
@@ -192,12 +193,28 @@ public class Game {
 	}
 	
 	public void onGameStateReceived(GameState state){
-		if(isValidGameState(state)){
-			
-		}
 		synchronized (syncObject) {
 			gameState = state;
 		}
+		
+		if(isValidGameState(state)){
+			if(state.getRemainSteps() == 0 && isNextPlayer()){
+				isCurrentPlayer = true;
+				gameState = gameState.toBuilder().setRemainSteps(GameStateHelper.DEFAULT_STEPS).build();
+				String oldPlayer = gameState.toBuilder().getPlayers(0);
+				//TODO not finished updating players list and taking turn
+			}
+			
+		} else {
+			//TODO end game
+		}
+		
+	}
+
+	private boolean isNextPlayer() {
+		List<String> playerList = gameState.getPlayersList();
+		//TODO Be careful not to check for an inexistent player in an invalid position
+		return player.equals(playerList.get(1));
 	}
 
 	public boolean isCurrentPlayer() {
