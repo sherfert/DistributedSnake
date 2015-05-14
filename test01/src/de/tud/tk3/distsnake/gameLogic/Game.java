@@ -6,27 +6,44 @@ import java.util.List;
 import de.tud.tk3.distsnake.GameStatus.GameState;
 
 public class Game {
+	
+	// Singleton stuff
+	private static Game instance;
+	public static synchronized Game getInstance() {
+		if(instance == null) {
+			instance = new Game();
+		}
+		return instance;
+	}
+	
+	/**
+	 * Private Constructor for the Singleton pattern.
+	 */
+	private Game() {
+	}
 
 	private List<GameStateUpdateObserver> gameUpdateObservers = new ArrayList<GameStateUpdateObserver>();
 	private HelloObserver helloObserver;
 	private GameState gameState;
 	private boolean isCurrentPlayer;
-	
-	private String player;
 
-	public Game() {
-	}
-	
-	public Game(String player){
+	private String player;
+	/**
+	 * @param player the current (initial) player
+	 */
+	public void setPlayer(String player) {
 		this.player = player;
 	}
-	
-	public void startGame(){
+
+
+	// TODO this must make sure, that nothing remains from an old game,
+	// i.e. clean up old state
+	public void startGame() {
 		isCurrentPlayer = !helloObserver.onGameStart(player);
-		if(isCurrentPlayer){
+		if (isCurrentPlayer) {
 			createDefaultGameState();
 		} else {
-			//TODO Wait until his turn
+			// TODO Wait until his turn
 		}
 	}
 
@@ -42,10 +59,10 @@ public class Game {
 			List<GameStateUpdateObserver> gameUpdateObservers) {
 		this.gameUpdateObservers = gameUpdateObservers;
 	}
-	
+
 	public void setHelloObserver(HelloObserver helloObserver) {
 		this.helloObserver = helloObserver;
-	}	
+	}
 
 	public void notifyOnGameUpdate(GameState state) {
 		for (GameStateUpdateObserver observer : gameUpdateObservers) {
@@ -62,10 +79,27 @@ public class Game {
 	}
 
 	public void updateGameState(GameState state) {
-		this.gameState = state;
+		// TODO
+		// this.gameState = state;
 		// notifyOnGameUpdate();
 	}
-	
+
+	public void leftPressed() {
+
+	}
+
+	public void rightPressed() {
+
+	}
+
+	public void upPressed() {
+
+	}
+
+	public void downPressed() {
+
+	}
+
 	public void onHello(String msgName) {
 		// TODO to be implemented
 		System.out.println(player + ": Hello received\t" + msgName);

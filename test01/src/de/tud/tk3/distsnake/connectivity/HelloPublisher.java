@@ -8,9 +8,9 @@ import de.tud.tk3.distsnake.gameLogic.HelloObserver;
 
 public class HelloPublisher extends TypedPublisher implements HelloObserver {
 
-	public HelloPublisher(Game game) {
+	public HelloPublisher() {
 		super("hello");
-		game.setHelloObserver(this);
+		Game.getInstance().setHelloObserver(this);
 		// TODO Auto-generated constructor stub
 	}
 
