@@ -7,7 +7,6 @@ import android.provider.SyncStateContract.Helpers;
 import de.tud.tk3.distsnake.GameStatus.GameState.Builder;
 import de.tud.tk3.distsnake.GameStatus.Coordinates;
 import de.tud.tk3.distsnake.GameStatus.GameState;
-import de.tud.tk3.distsnake.GameStatus.GameState.Builder;
 import de.tud.tk3.distsnake.GameStatus.GameState.Orientation;
 
 public class Game {
@@ -97,15 +96,50 @@ public class Game {
 	 * Updates the game state and notifies all observers.
 	 * 
 	 * TODO Should be called in intervals somewhere.
-	 * 
-	 * TODO synchronize
 	 */
 	private void updateGameState() {
-		// TODO
 		Builder gameBuilder = gameState.toBuilder();
+
 		// Set the new orientation
-		gameBuilder.setOrient(newOrientation);
-		// Move the snake ...
+		Orientation orient = (newOrientation == null) ? gameBuilder.getOrient()
+				: newOrientation;
+		gameBuilder.setOrient(orient);
+		// Add the new head
+		Coordinates newHead = null;
+		Coordinates oldHead = gameBuilder.getSnake(0);
+		switch (orient) {
+		case NORTH:
+			newHead = oldHead.toBuilder().setY(oldHead.getY() - 1).build();
+			break;
+		case EAST:
+			newHead = oldHead.toBuilder().setX(oldHead.getX() + 1).build();
+			break;
+		case SOUTH:
+			newHead = oldHead.toBuilder().setY(oldHead.getY() + 1).build();
+			break;
+		case WEST:
+			newHead = oldHead.toBuilder().setX(oldHead.getX() - 1).build();
+			break;
+		}
+		gameBuilder.addSnake(0, newHead);
+		// Check if the goal was eaten
+		if (gameState.getGoal().getX() == newHead.getX()
+				&& gameState.getGoal().getY() == newHead.getY()) {
+			// Set a new goal
+			Coordinates newGoal = GameStateHelper.createRandomGoal(gameBuilder.buildPartial());
+			gameBuilder.setGoal(newGoal);
+		} else {
+			// Remove the tail
+			gameBuilder.removeSnake(gameBuilder.getSnakeCount() - 1);
+		}
+
+		// Decrease to remaining steps
+		gameBuilder.setRemainSteps(gameBuilder.getRemainSteps() - 1);
+		
+		// Set the new game state
+		synchronized (syncObject) {
+			this.gameState = gameBuilder.build();
+		}
 
 		// Update all observers
 		notifyOnGameUpdate(gameState);
@@ -114,6 +148,9 @@ public class Game {
 		if (!isValidGameState(gameState)) {
 			// TODO end the game
 		}
+
+		// Set new orientation to null
+		newOrientation = null;
 	}
 
 	/**
@@ -133,8 +170,9 @@ public class Game {
 			return false;
 		}
 		// The position of the head should be nowhere in the remaining snake
-		for(int i = 1; i < state.getSnakeCount(); i++) {
-			if(head.equals(state.getSnake(i))) {
+		for (int i = 1; i < state.getSnakeCount(); i++) {
+			if (head.getX() == state.getSnake(i).getX()
+					&& head.getY() == state.getSnake(i).getY()) {
 				return false;
 			}
 		}
