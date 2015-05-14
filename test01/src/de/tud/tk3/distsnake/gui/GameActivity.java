@@ -30,6 +30,7 @@ public class GameActivity extends Activity {
 
 	/**
 	 * Units for the game size. Both width and height.
+	 * TODO use constants of GameHelper
 	 */
 	public static final int GAME_SIZE = 30;
 
@@ -120,6 +121,7 @@ public class GameActivity extends Activity {
 		currentPlayer.setText(Html.fromHtml(namesToDisplay + playerList));
 	}
 
+	// TODO Add border around actually used part of canvas
 	private int getUnitSize(int windowWidth) {
 		return (int) (windowWidth / (GAME_SIZE));
 	}
