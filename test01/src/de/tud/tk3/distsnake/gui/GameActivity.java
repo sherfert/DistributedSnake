@@ -87,39 +87,6 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 
 		// Register GUI as gamestate observer
 		Game.getInstance().subscribeGameUpdateObserver(this);
-
-		// TODO Remove Mockup data
-//		Coordinates s0 = Coordinates.newBuilder().setX(3).setY(5).build();
-//		Coordinates s1 = Coordinates.newBuilder().setX(3).setY(6).build();
-//		Coordinates s2 = Coordinates.newBuilder().setX(4).setY(6).build();
-//		Coordinates goalCoordinates = Coordinates.newBuilder().setX(10)
-//				.setY(12).build();
-//		final GameState gameStateMockUp = GameState.newBuilder().addSnake(s0)
-//				.addSnake(s1).addSnake(s2).setCurrentPlayer("Blah")
-//				.addPlayers("Ilmi").addPlayers("Satia").addPlayers("Ment")
-//				.addPlayers("Omar").addPlayers("Shin")
-//				.addPlayers("Ahmed Malik Al Madun")
-//				.addPlayers("Waris Manisatienrattana").setGoal(goalCoordinates)
-//				.setOrient(Orientation.NORTH).setRemainSteps(1).build();
-//
-//		GameState gameState = GameStateHelper
-//				.constructDefaultGameState(username);
-//
-//		onGameUpdate(gameState);
-
-		// TODO remove this
-		// Thread t = new Thread() {
-		// public void run() {
-		// try {
-		// Thread.sleep(3000);
-		// } catch (InterruptedException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-		// onGameUpdate(gameStateMockUp);
-		// }
-		// };
-		// t.start();
 	}
 
 	/**
@@ -188,6 +155,7 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 	}
 
 	// TODO implement backButton functionality
+	// There, cancel the task
 
 	// XXX Add border around actually used part of canvas
 	/**
