@@ -102,9 +102,40 @@ public class Game {
 	private void updateGameState() {
 		// TODO
 		Builder gameBuilder = gameState.toBuilder();
+
 		// Set the new orientation
-		gameBuilder.setOrient(newOrientation);
-		// Move the snake ...
+		Orientation orient = (newOrientation == null) ? gameBuilder.getOrient()
+				: newOrientation;
+		gameBuilder.setOrient(orient);
+		// Add the new head
+		Coordinates newHead = null;
+		Coordinates oldHead = gameBuilder.getSnake(0);
+		switch (orient) {
+		case NORTH:
+			newHead = oldHead.toBuilder().setY(oldHead.getY() - 1).build();
+			break;
+		case EAST:
+			newHead = oldHead.toBuilder().setX(oldHead.getX() + 1).build();
+			break;
+		case SOUTH:
+			newHead = oldHead.toBuilder().setY(oldHead.getY() + 1).build();
+			break;
+		case WEST:
+			newHead = oldHead.toBuilder().setX(oldHead.getX() - 1).build();
+			break;
+		}
+		gameBuilder.addSnake(0, newHead);
+		// Check if the goal was eaten
+		if (gameState.getGoal().getX() == newHead.getX()
+				&& gameState.getGoal().getY() == newHead.getY()) {
+			// TODO
+		} else {
+			// Remove the tail
+			gameBuilder.removeSnake(gameBuilder.getSnakeCount() - 1);
+		}
+
+		// Decrease to remaining steps
+		gameBuilder.setRemainSteps(gameBuilder.getRemainSteps() - 1);
 
 		// Update all observers
 		notifyOnGameUpdate(gameState);
@@ -113,6 +144,9 @@ public class Game {
 		if (!isValidGameState(gameState)) {
 			// TODO end the game
 		}
+
+		// Set new orientation to null
+		newOrientation = null;
 	}
 
 	/**
@@ -132,8 +166,9 @@ public class Game {
 			return false;
 		}
 		// The position of the head should be nowhere in the remaining snake
-		for(int i = 1; i < state.getSnakeCount(); i++) {
-			if(head.equals(state.getSnake(i))) {
+		for (int i = 1; i < state.getSnakeCount(); i++) {
+			if (head.getX() == state.getSnake(i).getX()
+					&& head.getY() == state.getSnake(i).getY()) {
 				return false;
 			}
 		}
