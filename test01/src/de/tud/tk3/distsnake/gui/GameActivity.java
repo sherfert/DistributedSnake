@@ -162,7 +162,8 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 						goalPaint);
 
 				// Check if we're the current player
-				if (username.equals(gameState.getCurrentPlayer())) {
+				if (Game.getInstance().isCurrentPlayer()) {
+				//if (username.equals(gameState.getCurrentPlayer())) {
 					// Enable buttons
 					upButton.setEnabled(true);
 					downButton.setEnabled(true);

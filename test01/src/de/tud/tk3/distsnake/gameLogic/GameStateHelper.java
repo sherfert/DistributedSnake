@@ -20,6 +20,8 @@ public class GameStateHelper {
 	public static final int HEIGHT = 30;
 	
 	private static Random rand = new Random();
+	/* TODO there are two invocations of that method. 
+	 * There should be only one */
 
 	public static GameState constructDefaultGameState(String player) {
 
@@ -32,26 +34,32 @@ public class GameStateHelper {
 		Coordinates cord3 = Coordinates.newBuilder()
 				.setX(X_SNAKE_DEFAULT_VALUE_3).setY(Y_SNAKE_DEFAULT_VALUE)
 				.build();
-		return GameState.newBuilder().addSnake(cord1).addSnake(cord2)
+		GameState gameState = GameState.newBuilder().addSnake(cord1).addSnake(cord2)
 				.addSnake(cord3).setCurrentPlayer(player)
 				.setOrient(Orientation.EAST).setRemainSteps(DEFAULT_STEPS)
-				.addPlayers(player).setGoal(createRandomGoal()).build();
+				.addPlayers(player).buildPartial();
+		return gameState.toBuilder().setGoal(createRandomGoal(gameState)).build();
 	}
 	
-	public static Coordinates createRandomGoal(){
+	public static Coordinates createRandomGoal(GameState state){
 		int x, y;
 		do {
 			x = rand.nextInt() % WIDTH;
-			y = rand.nextInt() % HEIGHT;	
-		} while(!checkVaildCoord(x, y));
+			y = rand.nextInt() % HEIGHT;
+		} while(!checkValidCoord(x, y, state));
 		return Coordinates.newBuilder().setX(x).setY(y).build();
 	}
 	
-	public static boolean checkVaildCoord(int x, int y){
-		//TODO refactor for general snake
-		return ((y == Y_SNAKE_DEFAULT_VALUE) && 
-				((x == X_SNAKE_DEFAULT_VALUE_1) || 
-				(x == X_SNAKE_DEFAULT_VALUE_2) || 
-				(x == X_SNAKE_DEFAULT_VALUE_3)));
+	public static boolean checkValidCoord(int x, int y, GameState state){
+		if ((x < 0) || (y < 0))
+			return false;
+		List<Coordinates> l = state.getSnakeList();
+		Iterator<Coordinates> i = l.iterator();
+		while(i.hasNext()) {
+			if ((i.next().getX() == x )
+					&& (i.next().getY() == y))
+				return false;
+		}
+		return true;
 	}
 }
