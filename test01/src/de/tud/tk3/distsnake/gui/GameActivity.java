@@ -112,10 +112,12 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 	 */
 	@Override
 	public void onGameLost() {
+		Game.getInstance().unsubscribeGameUpdateObserver(this);
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 				aDialog.show(); 
+				
 			}
 		});
 	}
