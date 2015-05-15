@@ -123,7 +123,7 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 	@Override
 	public void onGameUpdate(final GameState gameState) {
 		final String namesToDisplay = "<h1><b>" + gameState.getPlayers(0)
-				+ "</b></h1>";
+				+ "("+ gameState.getRemainSteps() +")"+"</b></h1>";
 		final StringBuilder playerList = new StringBuilder();
 
 		for (int i = 1; i < gameState.getPlayersCount(); i++)
