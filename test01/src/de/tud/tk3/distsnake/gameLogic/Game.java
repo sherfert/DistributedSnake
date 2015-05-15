@@ -44,18 +44,9 @@ public class Game {
 	private Orientation newOrientation;
 	
 	/**
-	 * The task that will update the game state in intervals.
-	 */
-	private TimerTask task = new TimerTask() {
-		@Override
-		public void run() {
-			updateGameState();
-		}
-	};
-	/**
 	 * The timer that handles scheduling of above task.
 	 */
-	private Timer timer = new Timer();
+	private Timer timer;
 
 	/**
 	 * @param player
@@ -73,6 +64,16 @@ public class Game {
 			createDefaultGameState();
 			isCurrentPlayer = true;
 
+			/**
+			 * The task that will update the game state in intervals.
+			 */
+			TimerTask task = new TimerTask() {
+				@Override
+				public void run() {
+					updateGameState();
+				}
+			};
+			timer = new Timer();
 			// Start the task repeatedly
 			timer.scheduleAtFixedRate(task,
 					GameStateHelper.DEFAULT_STEP_TIME_MS,
@@ -121,7 +122,18 @@ public class Game {
 	public void leaveGame() {
 		// The updating task should be cancelled. Calling it,
 		// even if it is not running does no harm and is safer.
-		task.cancel();
+		timer.cancel();
+		
+		// TODO If we're the current player...
+		// Control should be given to the next player. Therefore,
+		// there should be one last game state update with remaining
+		// steps 0!
+		if(isCurrentPlayer) {
+			this.gameState = gameState.toBuilder().setRemainSteps(0).build();
+			notifyOnGameUpdate(gameState);
+		}
+		
+		// 
 	}
 
 	/**
