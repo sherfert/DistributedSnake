@@ -21,4 +21,10 @@ public class GameStatePublisher extends TypedPublisher implements
 		}		
 	}
 
+	@Override
+	public void onGameLost() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

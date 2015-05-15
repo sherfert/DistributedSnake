@@ -10,9 +10,9 @@ import de.tud.tk3.distsnake.GameStatus.GameState.Orientation;
 
 public class GameStateHelper {
 
-	private static final int X_SNAKE_DEFAULT_VALUE_1 = 10;
+	private static final int X_SNAKE_DEFAULT_VALUE_1 = 12;
 	private static final int X_SNAKE_DEFAULT_VALUE_2 = 11;
-	private static final int X_SNAKE_DEFAULT_VALUE_3 = 12;
+	private static final int X_SNAKE_DEFAULT_VALUE_3 = 10;
 	private static final int Y_SNAKE_DEFAULT_VALUE = 10;
 	
 	public static final int WIDTH = 30;

@@ -64,7 +64,8 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 		double maxHeight = metrics.heightPixels * 0.50;
 		if (maxWindowSize > maxHeight)
 			maxWindowSize = (int) maxHeight;
-		Bitmap bg = Bitmap.createBitmap(metrics, maxWindowSize + CANV_DRAW_OFFSET, maxWindowSize + CANV_DRAW_OFFSET,
+		Bitmap bg = Bitmap.createBitmap(metrics, maxWindowSize
+				+ CANV_DRAW_OFFSET, maxWindowSize + CANV_DRAW_OFFSET,
 				Bitmap.Config.ARGB_8888);
 		canvas = new Canvas(bg);
 
@@ -75,8 +76,6 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 				new LayoutParams(maxWindowSize, maxWindowSize));
 		params.setGravity(Gravity.CENTER);
 		ll.setLayoutParams(params);
-
-		
 
 		// Paint for the backgroud
 		snakePaint = new Paint();
@@ -109,8 +108,9 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 	}
 
 	/**
-	 * Called when the game is over. TODO call this somewhere.
+	 * Called when the game is over.
 	 */
+	@Override
 	public void onGameLost() {
 		runOnUiThread(new Runnable() {
 			@Override
@@ -142,14 +142,17 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 				// Snake
 				for (Coordinates snakePart : gameState.getSnakeList()) {
 					canvas.drawCircle((snakePart.getX() + DOT_DRAW_OFFSET)
-							* getUnitSize(maxWindowSize), (snakePart.getY() + DOT_DRAW_OFFSET)
 							* getUnitSize(maxWindowSize),
+							(snakePart.getY() + DOT_DRAW_OFFSET)
+									* getUnitSize(maxWindowSize),
 							getUnitSize(maxWindowSize) / 2, snakePaint);
 				}
 				// Goal
-				canvas.drawCircle((gameState.getGoal().getX() + DOT_DRAW_OFFSET)
-						* getUnitSize(maxWindowSize), (gameState.getGoal().getY() + DOT_DRAW_OFFSET)
-						* getUnitSize(maxWindowSize),
+				canvas.drawCircle(
+						(gameState.getGoal().getX() + DOT_DRAW_OFFSET)
+								* getUnitSize(maxWindowSize), (gameState
+								.getGoal().getY() + DOT_DRAW_OFFSET)
+								* getUnitSize(maxWindowSize),
 						getUnitSize(maxWindowSize) / 2, goalPaint);
 
 				// Check if we're the current player
