@@ -177,9 +177,6 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 		});
 	}
 
-	// TODO implement backButton functionality
-	// There, cancel the task
-
 	// XXX Add border around actually used part of canvas
 	/**
 	 * Return the size of one snake unit in dp.

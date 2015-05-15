@@ -59,8 +59,11 @@ public class Game {
 		this.player = player;
 	}
 
-	// TODO this must make sure, that nothing remains from an old game,
-	// i.e. clean up old state
+	/**
+	 * Starts the game. This must make sure, that nothing remains from an old
+	 * game, i.e. clean up old state. If this is the first player to play, it
+	 * will give him control over the game and otherwise not.
+	 */
 	public void startGame() {
 		boolean isFirstPlayer = helloObserver.isOnlyPlayer();
 		if (isFirstPlayer) {
@@ -148,7 +151,8 @@ public class Game {
 		// We're not the current player anymore
 		isCurrentPlayer = false;
 
-		// TODO Unsubscribe from game channel
+
+		// Unsubscribe from game channel
 		Connector.getInstance().unregisterGameChannel();
 	}
 
@@ -238,8 +242,6 @@ public class Game {
 	/**
 	 * Checks a game state for validity (game over or not).
 	 * 
-	 * FIXME crash on the second game lost
-	 * 
 	 * @param state
 	 *            the state
 	 * @return if the state is valid.
@@ -320,6 +322,7 @@ public class Game {
 		 * TODO Validate if the players is in the playing screen in otder to
 		 * execute the refresh if not nothing should be done
 		 */
+
 		if (isValidGameState(state)) {
 			if (state.getRemainSteps() == 0 && isNextPlayer()) {
 				isCurrentPlayer = true;
