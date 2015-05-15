@@ -315,9 +315,7 @@ public class Game {
 	}
 
 	public void onGameStateReceived(GameState state) {
-		synchronized (syncObject) {
-			gameState = state;
-		}
+	
 		/*
 		 * TODO Validate if the players is in the playing screen in otder to
 		 * execute the refresh if not nothing should be done
@@ -325,11 +323,22 @@ public class Game {
 		if (isValidGameState(state)) {
 			if (state.getRemainSteps() == 0 && isNextPlayer()) {
 				isCurrentPlayer = true;
-				gameState = gameState.toBuilder()
-						.setRemainSteps(GameStateHelper.DEFAULT_STEPS).build();
-				String oldPlayer = gameState.toBuilder().getPlayers(0);
+				Builder gameStateBuilder = gameState.toBuilder();
+				gameStateBuilder.setRemainSteps(GameStateHelper.DEFAULT_STEPS);
+				String oldPlayer = gameStateBuilder.getPlayers(0);
 				// TODO not finished updating players list and taking turn
+				List<String> players = new ArrayList<String>(gameState.getPlayersList());
+				players.remove(0);
+				players.add(oldPlayer);
+				gameStateBuilder.clearPlayers().addAllPlayers(players);
+				synchronized(syncObject){
+					gameState = gameStateBuilder.build();
+				}
 				startGameLoop();
+			} else {
+				synchronized (syncObject) {
+					gameState = state;
+				}
 			}
 
 		} else {
