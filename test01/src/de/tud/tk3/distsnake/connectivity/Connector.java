@@ -111,5 +111,13 @@ public class Connector {
 	public void unSubscribeHello(){
 		node.removeSubscriber(helloSub);
 	}
+	
+	/**
+	 * Cleans up publishers and receivers.
+	 */
+	public void cleanup() {
+		node.delete();
+		disc.delete();
+	}
 
 }
