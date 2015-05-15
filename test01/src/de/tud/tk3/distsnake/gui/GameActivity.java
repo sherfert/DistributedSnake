@@ -35,6 +35,8 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 	private TextView currentPlayer;
 	private String username;
 
+	private final static int CANV_DRAW_OFFSET = 2;
+	private final static int DOT_DRAW_OFFSET = 1;
 	// private static final MAX_WIDTH = 300
 
 	private Button upButton, downButton, rightButton, leftButton;
@@ -58,7 +60,7 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 		double maxHeight = metrics.heightPixels * 0.50;
 		if (maxWindowSize > maxHeight)
 			maxWindowSize = (int) maxHeight;
-		Bitmap bg = Bitmap.createBitmap(metrics, maxWindowSize, maxWindowSize,
+		Bitmap bg = Bitmap.createBitmap(metrics, maxWindowSize + CANV_DRAW_OFFSET, maxWindowSize + CANV_DRAW_OFFSET,
 				Bitmap.Config.ARGB_8888);
 		canvas = new Canvas(bg);
 
@@ -120,15 +122,15 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 				canvas.drawRect(0, 0, maxWindowSize, maxWindowSize, bgPaint);
 				// Snake
 				for (Coordinates snakePart : gameState.getSnakeList()) {
-					canvas.drawCircle(snakePart.getX()
-							* getUnitSize(maxWindowSize), snakePart.getY()
+					canvas.drawCircle((snakePart.getX() + DOT_DRAW_OFFSET)
+							* getUnitSize(maxWindowSize), (snakePart.getY() + DOT_DRAW_OFFSET)
 							* getUnitSize(maxWindowSize),
 							getUnitSize(maxWindowSize) / 2, snakePaint);
 				}
 				// Goal
-				canvas.drawCircle(gameState.getGoal().getX()
-						* getUnitSize(maxWindowSize), gameState.getGoal()
-						.getY() * getUnitSize(maxWindowSize),
+				canvas.drawCircle((gameState.getGoal().getX() + DOT_DRAW_OFFSET)
+						* getUnitSize(maxWindowSize), (gameState.getGoal().getY() + DOT_DRAW_OFFSET)
+						* getUnitSize(maxWindowSize),
 						getUnitSize(maxWindowSize) / 2, goalPaint);
 
 				// Check if we're the current player
