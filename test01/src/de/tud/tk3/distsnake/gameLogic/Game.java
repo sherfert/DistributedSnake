@@ -155,8 +155,10 @@ public class Game {
 
 			this.gameState = gameState.toBuilder().setRemainSteps(0).build();
 			notifyOnGameUpdate(gameState);
+		} else {
+			helloObserver.onGameLeave(player);
 		}
-
+		
 		// We're not the current player anymore
 		//isCurrentPlayer = false;
 
@@ -379,6 +381,25 @@ public class Game {
 	 */
 	public boolean isCurrentPlayer() {
 		return gameState.getPlayers(0).equals(player);
+	}
+
+	/**
+	 * removes a player from the game state if the player leaves
+	 */
+	public void onFarewell(String playerName) {
+		System.out.println(player + ": Farewell received\t" + playerName);
+		synchronized (syncObject) {
+			if (isCurrentPlayer()) {
+				Builder gameStateBuilder = gameState.toBuilder();
+				
+				List<String> players = new ArrayList<String>(gameState.getPlayersList());
+				players.remove(playerName);				
+				gameStateBuilder.clearPlayers().addAllPlayers(players);
+				
+				gameState = gameStateBuilder.build();
+			}
+		}
+		
 	}
 
 }

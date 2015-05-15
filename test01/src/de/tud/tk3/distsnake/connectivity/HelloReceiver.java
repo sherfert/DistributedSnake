@@ -16,6 +16,10 @@ public class HelloReceiver implements ITypedReceiver {
 
 	public void receiveObject(Object object, Message msg) {
 		final Hello helloMsg = (Hello) object;
-		Game.getInstance().onHello(helloMsg.getName());
+		if(helloMsg.getMsg().equals("farewell")){
+			Game.getInstance().onFarewell(helloMsg.getName());
+		} else {
+			Game.getInstance().onHello(helloMsg.getName());
+		}		
 	}
 }

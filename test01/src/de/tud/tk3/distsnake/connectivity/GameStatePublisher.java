@@ -11,7 +11,7 @@ public class GameStatePublisher extends TypedPublisher implements
 
 	public GameStatePublisher(Game game) {
 		super("game");
-		game.subscribeGameUpdateObserver(this);
+		game.subscribeGameUpdateObserver(this);		
 	}
 
 	@Override

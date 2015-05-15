@@ -13,9 +13,6 @@ public class HelloPublisher extends TypedPublisher implements HelloObserver {
 		Game.getInstance().setHelloObserver(this);
 	}
 
-	/**
-	 * onGameStart(String username) returns false denoting that this is the only player
-	 */
 	@Override
 	public void onGameStart(String username) {
 		System.out.println("Entered onGameStart");
@@ -32,4 +29,16 @@ public class HelloPublisher extends TypedPublisher implements HelloObserver {
 	public boolean isOnlyPlayer(){
 		return this.getSubscribers().isEmpty();
 	}
+
+	@Override
+	public void onGameLeave(String username) {
+		System.out.println("Entered onGameLeave");
+		try{
+			Hello msg = Hello.newBuilder().setName(username).setMsg("farewell").build();
+			this.sendObject(msg);
+			System.out.println("Sent the farewell message");
+		} catch(Exception e) {
+			e.printStackTrace();
+		}		
+	}	
 }
