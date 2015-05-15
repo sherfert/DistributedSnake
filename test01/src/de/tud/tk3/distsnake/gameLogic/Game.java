@@ -336,6 +336,7 @@ public class Game {
 		}
 	}
 
+	// TODO if lost game state is received, the GUI is not updated
 	public void onGameStateReceived(GameState state) {
 
 		/*
@@ -346,13 +347,13 @@ public class Game {
 		if (isValidGameState(state)) {
 			if (state.getRemainSteps() == 0 && isNextPlayer()) {
 				synchronized (syncObject) {
-					Builder gameStateBuilder = gameState.toBuilder();
+					Builder gameStateBuilder = state.toBuilder();
 					gameStateBuilder
 							.setRemainSteps(GameStateHelper.DEFAULT_STEPS);
 					String oldPlayer = gameStateBuilder.getPlayers(0);
 					// TODO not finished updating players list and taking turn
 					List<String> players = new ArrayList<String>(
-							gameState.getPlayersList());
+							state.getPlayersList());
 					players.remove(0);
 					players.add(oldPlayer);
 					gameStateBuilder.clearPlayers().addAllPlayers(players);
