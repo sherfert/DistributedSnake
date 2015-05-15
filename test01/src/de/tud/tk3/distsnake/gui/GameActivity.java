@@ -33,7 +33,6 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 	private int maxWindowSize;
 	private Paint snakePaint;
 	private Paint goalPaint;
-	private Paint bgPaint;
 	private TextView currentPlayer;
 	private String username;
 
@@ -74,11 +73,7 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 		params.setGravity(Gravity.CENTER);
 		ll.setLayoutParams(params);
 
-		// Paint for the backgroud
-		bgPaint = new Paint();
-		bgPaint.setColor(Color.parseColor("#DADADA"));
-		bgPaint.setStyle(Paint.Style.FILL);
-		canvas.drawRect(0, 0, maxWindowSize, maxWindowSize, bgPaint);
+		
 
 		// Paint for the backgroud
 		snakePaint = new Paint();
@@ -127,7 +122,8 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 						+ playerList.toString()));
 
 				// Background
-				canvas.drawRect(0, 0, maxWindowSize, maxWindowSize, bgPaint);
+				canvas.drawColor(Color.parseColor("#DADADA"));
+				//canvas.drawRect(0, 0, maxWindowSize, maxWindowSize, bgPaint);
 				// Snake
 				for (Coordinates snakePart : gameState.getSnakeList()) {
 					canvas.drawCircle((snakePart.getX() + DOT_DRAW_OFFSET)
@@ -198,6 +194,7 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 	// Do nothing when people pressed back key
 	@Override
 	public void onBackPressed() {
-		return ;
+		Game.getInstance().leaveGame();
+		finish();
 	}
 }
