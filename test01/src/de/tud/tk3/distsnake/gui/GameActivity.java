@@ -33,6 +33,7 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 	private int maxWindowSize;
 	private Paint snakePaint;
 	private Paint goalPaint;
+	private Paint borderPaint;
 	private TextView currentPlayer;
 	private String username;
 
@@ -79,6 +80,11 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 		snakePaint = new Paint();
 		snakePaint.setColor(Color.parseColor("#000000"));
 		snakePaint.setStyle(Paint.Style.FILL);
+		
+		borderPaint = new Paint();
+		borderPaint.setColor(Color.parseColor("#000000"));
+		borderPaint.setStyle(Paint.Style.STROKE);
+		borderPaint.setStrokeWidth(getUnitSize(maxWindowSize));
 
 		goalPaint = new Paint();
 		goalPaint.setColor(Color.parseColor("#FF0000"));
@@ -123,6 +129,7 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 
 				// Background
 				canvas.drawColor(Color.parseColor("#DADADA"));
+				canvas.drawRect(0,0, maxWindowSize, maxWindowSize, borderPaint);
 				//canvas.drawRect(0, 0, maxWindowSize, maxWindowSize, bgPaint);
 				// Snake
 				for (Coordinates snakePart : gameState.getSnakeList()) {
