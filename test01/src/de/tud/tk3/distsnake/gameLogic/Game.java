@@ -110,14 +110,16 @@ public class Game {
 	}
 
 	public void notifyOnGameUpdate(GameState state) {
-		for (GameStateUpdateObserver observer : gameUpdateObservers) {
+		for (GameStateUpdateObserver observer : new ArrayList<GameStateUpdateObserver>(
+				gameUpdateObservers)) {
 			observer.onGameUpdate(state);
 		}
 	}
 
-	public void notifyOnGameLost() {
-		for (GameStateUpdateObserver observer : gameUpdateObservers) {
-			observer.onGameLost();
+	public void notifyOnGameLost(GameState state) {
+		for (GameStateUpdateObserver observer : new ArrayList<GameStateUpdateObserver>(
+				gameUpdateObservers)) {
+			observer.onGameLost(state);
 		}
 	}
 
@@ -151,7 +153,6 @@ public class Game {
 		// We're not the current player anymore
 		isCurrentPlayer = false;
 
-
 		// Unsubscribe from game channel
 		Connector.getInstance().unregisterGameChannel();
 	}
@@ -159,12 +160,12 @@ public class Game {
 	/**
 	 * This method is called when the game is lost.
 	 */
-	private void gameLost() {
+	private void gameLost(GameState state) {
 		// leave the game
 		leaveGame();
 
 		// Notify the observers
-		notifyOnGameLost();
+		notifyOnGameLost(state);
 	}
 
 	/**
@@ -226,13 +227,15 @@ public class Game {
 			this.gameState = gameBuilder.build();
 		}
 
-		// Update all observers
-		notifyOnGameUpdate(gameState);
+		
 
 		// Validate state
 		if (!isValidGameState(gameState)) {
 			// End the game
-			gameLost();
+			gameLost(gameState);
+		} else {
+			// Update all observers
+			notifyOnGameUpdate(gameState);
 		}
 
 		// Set new orientation to null
@@ -336,7 +339,7 @@ public class Game {
 			}
 
 		} else {
-			gameLost();
+			gameLost(gameState);
 		}
 		notifyOnGameUpdate(gameState);
 

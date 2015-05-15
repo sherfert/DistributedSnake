@@ -22,9 +22,13 @@ public class GameStatePublisher extends TypedPublisher implements
 	}
 
 	@Override
-	public void onGameLost() {
+	public void onGameLost(GameState state) {
+		// Send the last state
+		if(Game.getInstance().isCurrentPlayer()) {
+			this.sendObject(state);
+		}
+		// XXX ConcurrentModificationException?
 		Game.getInstance().unsubscribeGameUpdateObserver(this);
-		// TODO Auto-generated method stub
 		
 	}
 

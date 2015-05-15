@@ -17,7 +17,10 @@ public interface GameStateUpdateObserver {
 
 	/**
 	 * Invoked when the game was lost.
+	 * 
+	 * @param state
+	 *            the last state
 	 */
-	public void onGameLost();
+	public void onGameLost(GameState state);
 
 }

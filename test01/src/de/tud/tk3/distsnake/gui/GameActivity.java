@@ -109,7 +109,7 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 	 * Called when the game is over.
 	 */
 	@Override
-	public void onGameLost() {
+	public void onGameLost(GameState state) {
 		Game.getInstance().unsubscribeGameUpdateObserver(this);
 		runOnUiThread(new Runnable() {
 			@Override
