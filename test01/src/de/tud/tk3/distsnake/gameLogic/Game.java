@@ -35,7 +35,7 @@ public class Game {
 	private List<GameStateUpdateObserver> gameUpdateObservers = new ArrayList<GameStateUpdateObserver>();
 	private HelloObserver helloObserver;
 	private GameState gameState;
-	private boolean isCurrentPlayer;
+	// XXX private boolean isCurrentPlayer;
 
 	private Object syncObject = new Object();
 	private String player;
@@ -69,7 +69,7 @@ public class Game {
 		boolean isFirstPlayer = helloObserver.isOnlyPlayer();
 		if (isFirstPlayer) {
 			createDefaultGameState();
-			isCurrentPlayer = true;
+			//isCurrentPlayer = true;
 
 			startGameLoop();
 		} else {
@@ -148,7 +148,7 @@ public class Game {
 		// Control should be given to the next player. Therefore,
 		// there should be one last game state update with remaining
 		// steps 0!
-		if (isCurrentPlayer) {
+		if (isCurrentPlayer()) {
 			// The updating task should be cancelled.
 			//timer.cancel();
 			task.interrupt();
@@ -158,7 +158,7 @@ public class Game {
 		}
 
 		// We're not the current player anymore
-		isCurrentPlayer = false;
+		//isCurrentPlayer = false;
 
 		// Unsubscribe and unpublish from game channel
 		Connector.getInstance().unregisterGameChannel();
@@ -224,7 +224,7 @@ public class Game {
 			if (helloObserver.isOnlyPlayer()) {
 				gameBuilder.setRemainSteps(GameStateHelper.DEFAULT_STEPS);
 			} else {
-				isCurrentPlayer = false;
+				//isCurrentPlayer = false;
 				//timer.cancel();
 				// No interruption necessary
 				//task.interrupt();
@@ -352,7 +352,7 @@ public class Game {
 					gameState = gameStateBuilder.build();
 				}
 				notifyOnGameUpdate(gameState);
-				isCurrentPlayer = true;
+				//isCurrentPlayer = true;
 				startGameLoop();
 			} else {
 				synchronized (syncObject) {
@@ -374,8 +374,11 @@ public class Game {
 		return player.equals(playerList.get(1));
 	}
 
+	/**
+	 * @return if the player is the current player.
+	 */
 	public boolean isCurrentPlayer() {
-		return isCurrentPlayer;
+		return gameState.getPlayers(0).equals(player);
 	}
 
 }
