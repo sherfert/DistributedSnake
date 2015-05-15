@@ -2,6 +2,8 @@ package de.tud.tk3.distsnake.gui;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -95,12 +97,18 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 	 * Called when the game is over. TODO call this somewhere.
 	 */
 	public void onGameLost() {
-		new AlertDialog.Builder(this)
+		AlertDialog a = new AlertDialog.Builder(this)
 				.setTitle(R.string.gameActivity_gamelost_title)
-				.setPositiveButton(android.R.string.yes, null)
+				.setPositiveButton(android.R.string.yes, 
+						new DialogInterface.OnClickListener() 
+						{
+							public void onClick(DialogInterface dialog, int whichButton) 
+							{
+								finish();
+							}
+						})
 				.setIcon(android.R.drawable.ic_dialog_alert).show();
 
-		finish();
 	}
 
 	@Override
@@ -185,5 +193,11 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 		} else {
 			throw new RuntimeException("fuck all this!");
 		}
+	}
+
+	// Do nothing when people pressed back key
+	@Override
+	public void onBackPressed() {
+		return ;
 	}
 }
