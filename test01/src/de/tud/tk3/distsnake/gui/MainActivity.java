@@ -60,7 +60,6 @@ public class MainActivity extends Activity {
 		} else {
 			new Thread() {
 				public void run() {
-					Game.getInstance().setPlayer(username);
 					// XXX is it too fast register and then sending right away?
 					Connector.getInstance().registerGameChannel();
 					Game.getInstance().setPlayer(username);
@@ -79,7 +78,12 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		WifiManager wifi2 = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-		Connector.getInstance().initialize(wifi2);
+		final WifiManager wifi2 = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+
+		new Thread() {
+			public void run() {
+				Connector.getInstance().initialize(wifi2);
+			}
+		}.start();
 	}
 }
