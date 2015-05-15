@@ -36,9 +36,9 @@ public class Connector {
 	private Discovery disc;
 	private Node node;
 	
-	private GameStateReceiver gameStateReceiver;
 	private TypedSubscriber gameSub;
 	private GameStatePublisher gameStatePublisher;
+	private TypedSubscriber helloSub;
 
 	/**
 	 * Initializes the connector. Registers a publisher and a subscriber in
@@ -62,7 +62,7 @@ public class Connector {
 		node = new Node();
 		disc.add(node);
 		
-		gameStateReceiver = new GameStateReceiver();
+		GameStateReceiver gameStateReceiver = new GameStateReceiver();
 		gameSub = new TypedSubscriber("game");
 		gameSub.setReceiver(gameStateReceiver);
 		gameSub.registerType(GameState.class);
@@ -73,10 +73,10 @@ public class Connector {
 
 		/* Adding the hello subscriber */
 		HelloReceiver helloReceiver = new HelloReceiver();
-		TypedSubscriber helloSub = new TypedSubscriber("hello");
+		helloSub = new TypedSubscriber("hello");
 		helloSub.setReceiver(helloReceiver);
 		helloSub.registerType(Hello.class);
-		node.addSubscriber(helloSub);
+
 	}
 
 	/**
@@ -98,6 +98,18 @@ public class Connector {
 	public void unregisterGameChannel() {
 		node.removePublisher(gameStatePublisher);
 		node.removeSubscriber(gameSub);
+	}
+	/**
+	 * Subscribe in hello channel
+	 */
+	public void subscribeHello(){
+		node.addSubscriber(helloSub);		
+	}
+	/**
+	 * Unsubscribe from hello channel
+	 */
+	public void unSubscribeHello(){
+		node.removeSubscriber(helloSub);
 	}
 
 }

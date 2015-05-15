@@ -74,6 +74,7 @@ public class Game {
 		} else {
 			helloObserver.onGameStart(player);
 		}
+		Connector.getInstance().subscribeHello();
 	}
 
 	private void startGameLoop() {
@@ -153,8 +154,10 @@ public class Game {
 		// We're not the current player anymore
 		isCurrentPlayer = false;
 
-		// Unsubscribe from game channel
+		// Unsubscribe and unpublish from game channel
 		Connector.getInstance().unregisterGameChannel();
+		// Unsubscribe from hello channel
+		Connector.getInstance().unSubscribeHello();
 	}
 
 	/**

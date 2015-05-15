@@ -10,9 +10,7 @@ import de.tud.tk3.distsnake.gui.MainActivity;
 import de.tud.tk3.distsnake.connectivity.HelloMSG.Hello;
 
 public class HelloReceiver implements ITypedReceiver {
-	
-	MainActivity mainActivity;
-		
+			
 	public HelloReceiver() {
 	}
 
