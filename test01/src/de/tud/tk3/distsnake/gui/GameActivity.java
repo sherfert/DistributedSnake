@@ -182,7 +182,7 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 	 * Return the size of one snake unit in dp.
 	 */
 	private int getUnitSize(int windowWidth) {
-		return (int) (windowWidth / (GameStateHelper.WIDTH));
+		return (int) (windowWidth / (GameStateHelper.WIDTH + CANV_DRAW_OFFSET));
 	}
 
 	/**
