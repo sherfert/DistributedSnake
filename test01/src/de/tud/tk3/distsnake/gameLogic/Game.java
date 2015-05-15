@@ -334,7 +334,6 @@ public class Game {
 
 		if (isValidGameState(state)) {
 			if (state.getRemainSteps() == 0 && isNextPlayer()) {
-				isCurrentPlayer = true;
 				Builder gameStateBuilder = gameState.toBuilder();
 				gameStateBuilder.setRemainSteps(GameStateHelper.DEFAULT_STEPS);
 				String oldPlayer = gameStateBuilder.getPlayers(0);
@@ -346,6 +345,8 @@ public class Game {
 				synchronized(syncObject){
 					gameState = gameStateBuilder.build();
 				}
+				notifyOnGameUpdate(gameState);
+				isCurrentPlayer = true;
 				startGameLoop();
 			} else {
 				synchronized (syncObject) {
