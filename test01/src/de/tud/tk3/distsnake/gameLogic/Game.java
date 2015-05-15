@@ -345,12 +345,12 @@ public class Game {
 				synchronized (syncObject) {
 					gameState = state;
 				}
+				notifyOnGameUpdate(gameState);
 			}
 
 		} else {
 			gameLost(gameState);
 		}
-		notifyOnGameUpdate(gameState);
 
 	}
 
