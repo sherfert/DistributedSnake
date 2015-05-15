@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import android.provider.SyncStateContract.Helpers;
 import de.tud.tk3.distsnake.GameStatus.GameState.Builder;
 import de.tud.tk3.distsnake.GameStatus.Coordinates;
 import de.tud.tk3.distsnake.GameStatus.GameState;
@@ -105,6 +104,12 @@ public class Game {
 			observer.onGameUpdate(state);
 		}
 	}
+	
+	public void notifyOnGameLost() {
+		for (GameStateUpdateObserver observer : gameUpdateObservers) {
+			observer.onGameLost();
+		}
+	}
 
 	public void subscribeGameUpdateObserver(GameStateUpdateObserver observer) {
 		gameUpdateObservers.add(observer);
@@ -115,12 +120,12 @@ public class Game {
 	}
 	
 	/**
-	 * Called when the game is leaved by pressing the back button.
+	 * Called when the game is leaved by pressing the back button, or when the game was lost.
 	 * 
 	 * TODO isCurrentPlayer should be set to false in switching logic?
 	 */
 	public void leaveGame() {
-		// TODO If we're the current player...
+		// If we're the current player...
 		// Control should be given to the next player. Therefore,
 		// there should be one last game state update with remaining
 		// steps 0!
@@ -136,6 +141,17 @@ public class Game {
 		isCurrentPlayer = false;
 		
 		// TODO Unsubscribe from game channel
+	}
+	
+	/**
+	 * This method is called when the game is lost.
+	 */
+	private void gameLost() {
+		// leave the game
+		leaveGame();
+		
+		// Notify the observers
+		notifyOnGameLost();
 	}
 
 	/**
@@ -191,7 +207,8 @@ public class Game {
 
 		// Validate state
 		if (!isValidGameState(gameState)) {
-			// TODO end the game
+			// End the game
+			gameLost();
 		}
 
 		// Set new orientation to null

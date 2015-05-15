@@ -61,7 +61,8 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 		double maxHeight = metrics.heightPixels * 0.50;
 		if (maxWindowSize > maxHeight)
 			maxWindowSize = (int) maxHeight;
-		Bitmap bg = Bitmap.createBitmap(metrics, maxWindowSize + CANV_DRAW_OFFSET, maxWindowSize + CANV_DRAW_OFFSET,
+		Bitmap bg = Bitmap.createBitmap(metrics, maxWindowSize
+				+ CANV_DRAW_OFFSET, maxWindowSize + CANV_DRAW_OFFSET,
 				Bitmap.Config.ARGB_8888);
 		canvas = new Canvas(bg);
 
@@ -72,8 +73,6 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 				new LayoutParams(maxWindowSize, maxWindowSize));
 		params.setGravity(Gravity.CENTER);
 		ll.setLayoutParams(params);
-
-		
 
 		// Paint for the backgroud
 		snakePaint = new Paint();
@@ -89,21 +88,19 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 	}
 
 	/**
-	 * Called when the game is over. TODO call this somewhere.
+	 * Called when the game is over.
 	 */
+	@Override
 	public void onGameLost() {
-		AlertDialog a = new AlertDialog.Builder(this)
+		new AlertDialog.Builder(this)
 				.setTitle(R.string.gameActivity_gamelost_title)
-				.setPositiveButton(android.R.string.yes, 
-						new DialogInterface.OnClickListener() 
-						{
-							public void onClick(DialogInterface dialog, int whichButton) 
-							{
+				.setPositiveButton(android.R.string.yes,
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int whichButton) {
 								finish();
 							}
-						})
-				.setIcon(android.R.drawable.ic_dialog_alert).show();
-
+						}).setIcon(android.R.drawable.ic_dialog_alert).show();
 	}
 
 	@Override
@@ -123,18 +120,21 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 
 				// Background
 				canvas.drawColor(Color.parseColor("#DADADA"));
-				//canvas.drawRect(0, 0, maxWindowSize, maxWindowSize, bgPaint);
+				// canvas.drawRect(0, 0, maxWindowSize, maxWindowSize, bgPaint);
 				// Snake
 				for (Coordinates snakePart : gameState.getSnakeList()) {
 					canvas.drawCircle((snakePart.getX() + DOT_DRAW_OFFSET)
-							* getUnitSize(maxWindowSize), (snakePart.getY() + DOT_DRAW_OFFSET)
 							* getUnitSize(maxWindowSize),
+							(snakePart.getY() + DOT_DRAW_OFFSET)
+									* getUnitSize(maxWindowSize),
 							getUnitSize(maxWindowSize) / 2, snakePaint);
 				}
 				// Goal
-				canvas.drawCircle((gameState.getGoal().getX() + DOT_DRAW_OFFSET)
-						* getUnitSize(maxWindowSize), (gameState.getGoal().getY() + DOT_DRAW_OFFSET)
-						* getUnitSize(maxWindowSize),
+				canvas.drawCircle(
+						(gameState.getGoal().getX() + DOT_DRAW_OFFSET)
+								* getUnitSize(maxWindowSize), (gameState
+								.getGoal().getY() + DOT_DRAW_OFFSET)
+								* getUnitSize(maxWindowSize),
 						getUnitSize(maxWindowSize) / 2, goalPaint);
 
 				// Check if we're the current player
