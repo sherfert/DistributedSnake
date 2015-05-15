@@ -97,6 +97,7 @@ public class Game {
 				
 			}
 		};
+		task.start();
 	}
 
 	public void createDefaultGameState() {
