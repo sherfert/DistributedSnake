@@ -40,6 +40,8 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 	private final static int CANV_DRAW_OFFSET = 2;
 	private final static int DOT_DRAW_OFFSET = 1;
 	// private static final MAX_WIDTH = 300
+	
+	private AlertDialog.Builder aDialog;
 
 	private Button upButton, downButton, rightButton, leftButton;
 
@@ -92,24 +94,30 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 
 		// Register GUI as gamestate observer
 		Game.getInstance().subscribeGameUpdateObserver(this);
+		
+		aDialog = new AlertDialog.Builder(this)
+		.setTitle(R.string.gameActivity_gamelost_title)
+		.setPositiveButton(android.R.string.yes, 
+			new DialogInterface.OnClickListener() 
+			{
+				public void onClick(DialogInterface dialog, int whichButton) 
+				{
+					finish();
+				}
+			})
+		.setIcon(android.R.drawable.ic_dialog_alert);
 	}
 
 	/**
 	 * Called when the game is over. TODO call this somewhere.
 	 */
 	public void onGameLost() {
-		AlertDialog a = new AlertDialog.Builder(this)
-				.setTitle(R.string.gameActivity_gamelost_title)
-				.setPositiveButton(android.R.string.yes, 
-						new DialogInterface.OnClickListener() 
-						{
-							public void onClick(DialogInterface dialog, int whichButton) 
-							{
-								finish();
-							}
-						})
-				.setIcon(android.R.drawable.ic_dialog_alert).show();
-
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				aDialog.show(); 
+			}
+		});
 	}
 
 	@Override
@@ -162,8 +170,7 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 
 				// Redraw
 				LinearLayout ll = (LinearLayout) findViewById(R.id.gameActivity_linearLayout_canvas);
-				ll.invalidate();
-			}
+				ll.invalidate();}
 		});
 	}
 
