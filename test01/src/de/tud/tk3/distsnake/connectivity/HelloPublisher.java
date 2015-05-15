@@ -29,7 +29,7 @@ public class HelloPublisher extends TypedPublisher implements HelloObserver {
 	}
 	
 	@Override
-	public boolean isFirstPlayer(){
+	public boolean isOnlyPlayer(){
 		return this.getSubscribers().isEmpty();
 	}
 }

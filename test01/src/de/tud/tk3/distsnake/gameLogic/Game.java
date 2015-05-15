@@ -41,7 +41,7 @@ public class Game {
 	 * the orientation did not change.
 	 */
 	private Orientation newOrientation;
-	
+
 	/**
 	 * The timer that handles scheduling of above task.
 	 */
@@ -58,28 +58,31 @@ public class Game {
 	// TODO this must make sure, that nothing remains from an old game,
 	// i.e. clean up old state
 	public void startGame() {
-		boolean isFirstPlayer = helloObserver.isFirstPlayer();
+		boolean isFirstPlayer = helloObserver.isOnlyPlayer();
 		if (isFirstPlayer) {
 			createDefaultGameState();
 			isCurrentPlayer = true;
 
-			/**
-			 * The task that will update the game state in intervals.
-			 */
-			TimerTask task = new TimerTask() {
-				@Override
-				public void run() {
-					updateGameState();
-				}
-			};
-			timer = new Timer();
-			// Start the task repeatedly
-			timer.scheduleAtFixedRate(task,
-					GameStateHelper.DEFAULT_STEP_TIME_MS,
-					GameStateHelper.DEFAULT_STEP_TIME_MS);
+			startGameLoop();
 		} else {
 			helloObserver.onGameStart(player);
 		}
+	}
+
+	private void startGameLoop() {
+		/**
+		 * The task that will update the game state in intervals.
+		 */
+		TimerTask task = new TimerTask() {
+			@Override
+			public void run() {
+				updateGameState();
+			}
+		};
+		timer = new Timer();
+		// Start the task repeatedly
+		timer.scheduleAtFixedRate(task, GameStateHelper.DEFAULT_STEP_TIME_MS,
+				GameStateHelper.DEFAULT_STEP_TIME_MS);
 	}
 
 	public void createDefaultGameState() {
@@ -104,7 +107,7 @@ public class Game {
 			observer.onGameUpdate(state);
 		}
 	}
-	
+
 	public void notifyOnGameLost() {
 		for (GameStateUpdateObserver observer : gameUpdateObservers) {
 			observer.onGameLost();
@@ -118,9 +121,10 @@ public class Game {
 	public void unsubscribeGameUpdateObserver(GameStateUpdateObserver observer) {
 		gameUpdateObservers.remove(observer);
 	}
-	
+
 	/**
-	 * Called when the game is leaved by pressing the back button, or when the game was lost.
+	 * Called when the game is leaved by pressing the back button, or when the
+	 * game was lost.
 	 * 
 	 * TODO isCurrentPlayer should be set to false in switching logic?
 	 */
@@ -129,27 +133,27 @@ public class Game {
 		// Control should be given to the next player. Therefore,
 		// there should be one last game state update with remaining
 		// steps 0!
-		if(isCurrentPlayer) {
+		if (isCurrentPlayer) {
 			// The updating task should be cancelled.
 			timer.cancel();
-			
+
 			this.gameState = gameState.toBuilder().setRemainSteps(0).build();
 			notifyOnGameUpdate(gameState);
 		}
-		
+
 		// We're not the current player anymore
 		isCurrentPlayer = false;
-		
+
 		// TODO Unsubscribe from game channel
 	}
-	
+
 	/**
 	 * This method is called when the game is lost.
 	 */
 	private void gameLost() {
 		// leave the game
 		leaveGame();
-		
+
 		// Notify the observers
 		notifyOnGameLost();
 	}
@@ -196,6 +200,15 @@ public class Game {
 
 		// Decrease to remaining steps
 		gameBuilder.setRemainSteps(gameBuilder.getRemainSteps() - 1);
+
+		if (gameState.getRemainSteps() == 0) {
+			if (helloObserver.isOnlyPlayer()) {
+				gameBuilder.setRemainSteps(20);
+			} else {
+				isCurrentPlayer = false;
+				timer.cancel();
+			}
+		}
 
 		// Set the new game state
 		synchronized (syncObject) {
@@ -296,21 +309,23 @@ public class Game {
 		synchronized (syncObject) {
 			gameState = state;
 		}
-		/* TODO Validate if the players is in the playing screen in otder to execute the refresh
-		 * if not nothing should be done 
-		 * */
-//		if (isValidGameState(state)) {
-//			if (state.getRemainSteps() == 0 && isNextPlayer()) {
-//				isCurrentPlayer = true;
-//				gameState = gameState.toBuilder()
-//						.setRemainSteps(GameStateHelper.DEFAULT_STEPS).build();
-//				String oldPlayer = gameState.toBuilder().getPlayers(0);
-//				// TODO not finished updating players list and taking turn
-//			}
-//
-//		} else {
-//			// TODO end game
-//		}
+		/*
+		 * TODO Validate if the players is in the playing screen in otder to
+		 * execute the refresh if not nothing should be done
+		 */
+		if (isValidGameState(state)) {
+			if (state.getRemainSteps() == 0 && isNextPlayer()) {
+				isCurrentPlayer = true;
+				gameState = gameState.toBuilder()
+						.setRemainSteps(GameStateHelper.DEFAULT_STEPS).build();
+				String oldPlayer = gameState.toBuilder().getPlayers(0);
+				// TODO not finished updating players list and taking turn
+				startGameLoop();
+			}
+
+		} else {
+			gameLost();
+		}
 		notifyOnGameUpdate(gameState);
 
 	}

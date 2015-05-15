@@ -79,7 +79,7 @@ public class MainActivity extends Activity {
 			    .setIcon(android.R.drawable.ic_dialog_alert)
 			    .show();
 		} else {
-			
+			Game.getInstance().setPlayer(username);
 			Game.getInstance().startGame();
 			
 			intent.putExtra("username", username);
@@ -170,7 +170,6 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 
 		// TODO actual name
-		Game.getInstance().setPlayer("Ment");
 		WifiManager wifi2 = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 		Connector connector = new Connector(wifi2);
 //		game.startGame();
