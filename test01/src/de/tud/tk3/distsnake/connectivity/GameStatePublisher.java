@@ -16,7 +16,9 @@ public class GameStatePublisher extends TypedPublisher implements
 
 	@Override
 	public void onGameUpdate(GameState state) {
-		this.sendObject(state);
+		if(Game.getInstance().isCurrentPlayer()) {
+			this.sendObject(state);
+		}		
 	}
 
 }

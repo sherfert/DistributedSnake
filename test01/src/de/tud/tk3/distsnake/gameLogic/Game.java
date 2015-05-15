@@ -42,6 +42,20 @@ public class Game {
 	 * the orientation did not change.
 	 */
 	private Orientation newOrientation;
+	
+	/**
+	 * The task that will update the game state in intervals.
+	 */
+	private TimerTask task = new TimerTask() {
+		@Override
+		public void run() {
+			updateGameState();
+		}
+	};
+	/**
+	 * The timer that handles scheduling of above task.
+	 */
+	private Timer timer = new Timer();
 
 	/**
 	 * @param player
@@ -59,18 +73,10 @@ public class Game {
 			createDefaultGameState();
 			isCurrentPlayer = true;
 
-			// TODO move this in a general place
-			TimerTask task = new TimerTask() {
-				@Override
-				public void run() {
-					updateGameState();
-				}
-			};
-			Timer timer = new Timer();
+			// Start the task repeatedly
 			timer.scheduleAtFixedRate(task,
 					GameStateHelper.DEFAULT_STEP_TIME_MS,
 					GameStateHelper.DEFAULT_STEP_TIME_MS);
-			//task.cancel()
 		} else {
 			helloObserver.onGameStart(player);
 		}
@@ -106,11 +112,20 @@ public class Game {
 	public void unsubscribeGameUpdateObserver(GameStateUpdateObserver observer) {
 		gameUpdateObservers.remove(observer);
 	}
+	
+	/**
+	 * Called when the game is leaved by pressing the back button.
+	 * 
+	 * TODO call somewhere
+	 */
+	public void leaveGame() {
+		// The updating task should be cancelled. Calling it,
+		// even if it is not running does no harm and is safer.
+		task.cancel();
+	}
 
 	/**
 	 * Updates the game state and notifies all observers.
-	 * 
-	 * TODO Should be called in intervals somewhere.
 	 */
 	private void updateGameState() {
 		Builder gameBuilder = gameState.toBuilder();
@@ -250,19 +265,22 @@ public class Game {
 		synchronized (syncObject) {
 			gameState = state;
 		}
-
-		if (isValidGameState(state)) {
-			if (state.getRemainSteps() == 0 && isNextPlayer()) {
-				isCurrentPlayer = true;
-				gameState = gameState.toBuilder()
-						.setRemainSteps(GameStateHelper.DEFAULT_STEPS).build();
-				String oldPlayer = gameState.toBuilder().getPlayers(0);
-				// TODO not finished updating players list and taking turn
-			}
-
-		} else {
-			// TODO end game
-		}
+		/* TODO Validate if the players is in the playing screen in otder to execute the refresh
+		 * if not nothing should be done 
+		 * */
+//		if (isValidGameState(state)) {
+//			if (state.getRemainSteps() == 0 && isNextPlayer()) {
+//				isCurrentPlayer = true;
+//				gameState = gameState.toBuilder()
+//						.setRemainSteps(GameStateHelper.DEFAULT_STEPS).build();
+//				String oldPlayer = gameState.toBuilder().getPlayers(0);
+//				// TODO not finished updating players list and taking turn
+//			}
+//
+//		} else {
+//			// TODO end game
+//		}
+		notifyOnGameUpdate(gameState);
 
 	}
 

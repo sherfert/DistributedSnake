@@ -40,22 +40,26 @@ public class Connector {
 		node = new Node();
 		disc.add(node);
 
+		/* Adding the publishers */
 		HelloPublisher helloPublisher = new HelloPublisher();
-//		GameStatePublisher gameStatePublisher = new GameStatePublisher();
+		GameStatePublisher gameStatePublisher = new GameStatePublisher(Game.getInstance());		
 		
 		node.addPublisher(helloPublisher);
-//		node.addPublisher(gameStatePublisher);
+		node.addPublisher(gameStatePublisher);
 		
-//		GameStateReceiver gameStateReceiver = new GameStateReceiver();
-//		TypedSubscriber gameSub = new TypedSubscriber("game");
-//		gameSub.setReceiver(gameStateReceiver);
-//		gameSub.registerType(GameState.class);
+		/* Adding the subscribers */
+		GameStateReceiver gameStateReceiver = new GameStateReceiver();
+		TypedSubscriber gameSub = new TypedSubscriber("game");
+		gameSub.setReceiver(gameStateReceiver);
+		gameSub.registerType(GameState.class);
 		
 		HelloReceiver helloReceiver = new HelloReceiver();
 		TypedSubscriber helloSub = new TypedSubscriber("hello");
 		helloSub.setReceiver(helloReceiver);
-		helloSub.registerType(Hello.class);
+		helloSub.registerType(Hello.class);		
+		
 		node.addSubscriber(helloSub);
+		node.addSubscriber(gameSub);
 	}
 	
 }
