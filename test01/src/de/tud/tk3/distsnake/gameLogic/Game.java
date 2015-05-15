@@ -215,11 +215,14 @@ public class Game {
 
 		if (gameState.getRemainSteps() == 0) {
 			if (helloObserver.isOnlyPlayer()) {
-				gameBuilder.setRemainSteps(20);
+				gameBuilder.setRemainSteps(GameStateHelper.DEFAULT_STEPS);
 			} else {
 				isCurrentPlayer = false;
 				timer.cancel();
 			}
+		} else if(gameState.getRemainSteps() < 0) {
+			System.err.println("Execution continued. Remaining steps: " + gameState.getRemainSteps());
+			return;
 		}
 
 		// Set the new game state
