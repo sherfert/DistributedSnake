@@ -80,6 +80,8 @@ public class MainActivity extends Activity {
 			    .show();
 		} else {
 			Game.getInstance().setPlayer(username);
+			// XXX is it too fast register and then sending right away?
+			Connector.getInstance().registerGameChannel();
 			Game.getInstance().startGame();
 			
 			intent.putExtra("username", username);
@@ -171,58 +173,6 @@ public class MainActivity extends Activity {
 
 		// TODO actual name
 		WifiManager wifi2 = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-		Connector connector = new Connector(wifi2);
-//		game.startGame();
-		
-//		TODO remove unnecessary code
-		if(true)return;
-
-//		tv = new TextView(this);
-//		tv.setText("");
-		//setContentView(tv);
-		
-		WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-		if (wifi != null) {
-			MulticastLock mcLock = wifi.createMulticastLock("mylock");
-			mcLock.acquire();
-			// mcLock.release();
-		} else {
-			Log.v("android-umundo", "Cannot get WifiManager");
-		}
-
-		// System.loadLibrary("umundoNativeJava");
-		System.loadLibrary("umundoNativeJava_d");
-
-		disc = new Discovery(DiscoveryType.MDNS);
-
-		node = new Node();
-		disc.add(node);
-
-		fooPub = new TypedPublisher("pingpong");
-		node.addPublisher(fooPub);
-
-		fooSub = new TypedSubscriber("pingpong");
-		fooSub.setReceiver(new TestTypedReceiver());
-		node.addSubscriber(fooSub);
-		fooSub.registerType(GameState.class);
-		
-		/*
-		Coordinates s0 = Coordinates.newBuilder().setX(3).setY(5).build();
-		Coordinates s1 = Coordinates.newBuilder().setX(4).setY(6).build();
-		GameState msg = GameState.newBuilder().addSnake(s0).addSnake(s1)
-        		.setUsername("Blah").setPosition("ahh").build();
-		try {
-			Builder mBuilder = msg.toBuilder();
-			mBuilder.removeSnake(0);//   getSnakeList().remove(0);
-            ChatMessage msg2 = mBuilder.build();
-            List<SnakePart> list2 = msg2.getSnakeList();
-            System.out.println(list2);
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-		*/
-		
-		testPublishing = new Thread(new TestPublishing());
-		testPublishing.start();
+		Connector.getInstance().initialize(wifi2);
 	}
 }

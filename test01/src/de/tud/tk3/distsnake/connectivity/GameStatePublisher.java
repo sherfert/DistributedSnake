@@ -23,6 +23,7 @@ public class GameStatePublisher extends TypedPublisher implements
 
 	@Override
 	public void onGameLost() {
+		Game.getInstance().unsubscribeGameUpdateObserver(this);
 		// TODO Auto-generated method stub
 		
 	}

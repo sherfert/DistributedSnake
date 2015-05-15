@@ -9,7 +9,11 @@ import de.tud.tk3.distsnake.GameStatus.GameState.Builder;
 import de.tud.tk3.distsnake.GameStatus.Coordinates;
 import de.tud.tk3.distsnake.GameStatus.GameState;
 import de.tud.tk3.distsnake.GameStatus.GameState.Orientation;
+import de.tud.tk3.distsnake.connectivity.Connector;
 
+/**
+ * Central game logic.
+ */
 public class Game {
 
 	// Singleton stuff
@@ -145,6 +149,7 @@ public class Game {
 		isCurrentPlayer = false;
 
 		// TODO Unsubscribe from game channel
+		Connector.getInstance().unregisterGameChannel();
 	}
 
 	/**
@@ -160,6 +165,8 @@ public class Game {
 
 	/**
 	 * Updates the game state and notifies all observers.
+	 * 
+	 * TODO maybe change order of endGame and notifyGSUpdate (for GUI).
 	 */
 	private void updateGameState() {
 		Builder gameBuilder = gameState.toBuilder();
@@ -230,6 +237,8 @@ public class Game {
 
 	/**
 	 * Checks a game state for validity (game over or not).
+	 * 
+	 * FIXME crash on the second game lost
 	 * 
 	 * @param state
 	 *            the state
