@@ -1,20 +1,16 @@
 package de.tud.tk3.distsnake.connectivity;
 
 import org.umundo.core.Discovery;
-import org.umundo.core.Node;
 import org.umundo.core.Discovery.DiscoveryType;
-import org.umundo.s11n.TypedPublisher;
+import org.umundo.core.Node;
 import org.umundo.s11n.TypedSubscriber;
 
-import android.app.Activity;
-import android.content.Context;
 import android.net.wifi.WifiManager;
 import android.net.wifi.WifiManager.MulticastLock;
 import android.util.Log;
 import de.tud.tk3.distsnake.GameStatus.GameState;
 import de.tud.tk3.distsnake.connectivity.HelloMSG.Hello;
 import de.tud.tk3.distsnake.gameLogic.Game;
-import de.tud.tk3.distsnake.gui.MainActivity.TestTypedReceiver;
 
 /**
  * Central connectivity module.
@@ -84,7 +80,7 @@ public class Connector {
 	}
 
 	/**
-	 * Registers subscriber and publisher from the game channel. TODO call
+	 * Registers subscriber and publisher from the game channel.
 	 */
 	public void registerGameChannel() {
 		// Adding game publisher (needs to be recreated every time!)
@@ -97,7 +93,7 @@ public class Connector {
 	}
 
 	/**
-	 * Unregisters subscriber and publisher from the game channel. TODO call
+	 * Unregisters subscriber and publisher from the game channel.
 	 */
 	public void unregisterGameChannel() {
 		node.removePublisher(gameStatePublisher);
