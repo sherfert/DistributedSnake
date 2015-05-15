@@ -3,7 +3,6 @@ package de.tud.tk3.distsnake.gui;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -21,7 +20,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import de.tud.tk3.distsnake.GameStatus.Coordinates;
 import de.tud.tk3.distsnake.GameStatus.GameState;
-import de.tud.tk3.distsnake.GameStatus.GameState.Orientation;
 import de.tud.tk3.distsnake.R;
 import de.tud.tk3.distsnake.gameLogic.Game;
 import de.tud.tk3.distsnake.gameLogic.GameStateHelper;
@@ -85,7 +83,7 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 		borderPaint = new Paint();
 		borderPaint.setColor(Color.parseColor("#000000"));
 		borderPaint.setStyle(Paint.Style.STROKE);
-		borderPaint.setStrokeWidth(getUnitSize(maxWindowSize));
+		borderPaint.setStrokeWidth(1);
 
 		goalPaint = new Paint();
 		goalPaint.setColor(Color.parseColor("#FF0000"));
