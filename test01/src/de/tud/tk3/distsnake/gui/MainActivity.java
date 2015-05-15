@@ -40,34 +40,37 @@ import de.tud.tk3.distsnake.gameLogic.Game;
  */
 public class MainActivity extends Activity {
 
-	//TextView tv;
+	// TextView tv;
 	Thread testPublishing;
 	Discovery disc;
 	Node node;
 	TypedPublisher fooPub;
 	TypedSubscriber fooSub;
-	
+
 	public void startGame(View view) {
 		Intent intent = new Intent(this, GameActivity.class);
 		EditText usernameEditText = (EditText) findViewById(R.id.mainActivity_editText_username);
-		String username = usernameEditText.getText().toString();
-		if(username.trim().isEmpty()){
+		final String username = usernameEditText.getText().toString();
+		if (username.trim().isEmpty()) {
 			new AlertDialog.Builder(this)
-			    .setTitle(R.string.mainActivity_invalidUsername)
-			    .setMessage(R.string.mainActivity_invalidUsernameMessage)
-			    .setPositiveButton(android.R.string.yes, null)
-			    .setIcon(android.R.drawable.ic_dialog_alert)
-			    .show();
+					.setTitle(R.string.mainActivity_invalidUsername)
+					.setMessage(R.string.mainActivity_invalidUsernameMessage)
+					.setPositiveButton(android.R.string.yes, null)
+					.setIcon(android.R.drawable.ic_dialog_alert).show();
 		} else {
-			Game.getInstance().setPlayer(username);
-			// XXX is it too fast register and then sending right away?
-			Connector.getInstance().registerGameChannel();
-			Game.getInstance().setPlayer(username);
-			Game.getInstance().startGame();
-			
+			new Thread() {
+				public void run() {
+					Game.getInstance().setPlayer(username);
+					// XXX is it too fast register and then sending right away?
+					Connector.getInstance().registerGameChannel();
+					Game.getInstance().setPlayer(username);
+					Game.getInstance().startGame();
+				}
+			}.start();
+
 			intent.putExtra("username", username);
 			startActivity(intent);
-		}		
+		}
 	}
 
 	/** Called when the activity is first created. */
