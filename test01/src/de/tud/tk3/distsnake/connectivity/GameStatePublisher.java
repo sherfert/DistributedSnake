@@ -27,7 +27,6 @@ public class GameStatePublisher extends TypedPublisher implements
 		if(Game.getInstance().isCurrentPlayer()) {
 			this.sendObject(state);
 		}
-		// XXX ConcurrentModificationException?
 		Game.getInstance().unsubscribeGameUpdateObserver(this);
 		
 	}

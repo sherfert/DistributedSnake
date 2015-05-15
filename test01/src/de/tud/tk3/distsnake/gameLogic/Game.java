@@ -49,7 +49,8 @@ public class Game {
 	/**
 	 * The timer that handles scheduling of above task.
 	 */
-	private Timer timer;
+	//private Timer timer;
+	private Thread task;
 
 	/**
 	 * @param player
@@ -81,16 +82,21 @@ public class Game {
 		/**
 		 * The task that will update the game state in intervals.
 		 */
-		TimerTask task = new TimerTask() {
+		task = new Thread() {
 			@Override
 			public void run() {
-				updateGameState();
+				// while > 0, so that once it is 0, no execution no more!
+				while(gameState.getRemainSteps() > 0 && !Thread.interrupted()) {
+					try {
+						Thread.sleep(GameStateHelper.DEFAULT_STEP_TIME_MS);
+					} catch (InterruptedException e) {
+						interrupt();
+					}
+					updateGameState();
+				}
+				
 			}
 		};
-		timer = new Timer();
-		// Start the task repeatedly
-		timer.scheduleAtFixedRate(task, GameStateHelper.DEFAULT_STEP_TIME_MS,
-				GameStateHelper.DEFAULT_STEP_TIME_MS);
 	}
 
 	public void createDefaultGameState() {
@@ -135,8 +141,6 @@ public class Game {
 	/**
 	 * Called when the game is leaved by pressing the back button, or when the
 	 * game was lost.
-	 * 
-	 * TODO isCurrentPlayer should be set to false in switching logic?
 	 */
 	public void leaveGame() {
 		// If we're the current player...
@@ -145,7 +149,8 @@ public class Game {
 		// steps 0!
 		if (isCurrentPlayer) {
 			// The updating task should be cancelled.
-			timer.cancel();
+			//timer.cancel();
+			task.interrupt();
 
 			this.gameState = gameState.toBuilder().setRemainSteps(0).build();
 			notifyOnGameUpdate(gameState);
@@ -173,8 +178,6 @@ public class Game {
 
 	/**
 	 * Updates the game state and notifies all observers.
-	 * 
-	 * TODO maybe change order of endGame and notifyGSUpdate (for GUI).
 	 */
 	private void updateGameState() {
 		Builder gameBuilder = gameState.toBuilder();
@@ -221,7 +224,9 @@ public class Game {
 				gameBuilder.setRemainSteps(GameStateHelper.DEFAULT_STEPS);
 			} else {
 				isCurrentPlayer = false;
-				timer.cancel();
+				//timer.cancel();
+				// No interruption necessary
+				//task.interrupt();
 			}
 		} else if(gameState.getRemainSteps() < 0) {
 			System.err.println("Execution continued. Remaining steps: " + gameState.getRemainSteps());
@@ -328,7 +333,7 @@ public class Game {
 	public void onGameStateReceived(GameState state) {
 	
 		/*
-		 * TODO Validate if the players is in the playing screen in otder to
+		 * TODO Validate if the players is in the playing screen in order to
 		 * execute the refresh if not nothing should be done
 		 */
 
