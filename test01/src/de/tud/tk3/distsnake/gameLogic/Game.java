@@ -117,23 +117,25 @@ public class Game {
 	/**
 	 * Called when the game is leaved by pressing the back button.
 	 * 
-	 * TODO call somewhere
+	 * TODO isCurrentPlayer should be set to false in switching logic?
 	 */
 	public void leaveGame() {
-		// The updating task should be cancelled. Calling it,
-		// even if it is not running does no harm and is safer.
-		timer.cancel();
-		
 		// TODO If we're the current player...
 		// Control should be given to the next player. Therefore,
 		// there should be one last game state update with remaining
 		// steps 0!
 		if(isCurrentPlayer) {
+			// The updating task should be cancelled.
+			timer.cancel();
+			
 			this.gameState = gameState.toBuilder().setRemainSteps(0).build();
 			notifyOnGameUpdate(gameState);
 		}
 		
-		// 
+		// We're not the current player anymore
+		isCurrentPlayer = false;
+		
+		// TODO Unsubscribe from game channel
 	}
 
 	/**
