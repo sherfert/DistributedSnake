@@ -162,7 +162,18 @@ public class Game {
 			notifyOnGameUpdate(gameState);
 		}
 		
-		helloObserver.onGameLeave(player);
+		new Thread(){
+			public void run(){
+				try{
+					Thread.sleep(500);
+					helloObserver.onGameLeave(player);
+				} catch(InterruptedException e){
+					e.printStackTrace();
+				}
+				
+			}
+		}.start();
+		
 		
 		// We're not the current player anymore
 		// isCurrentPlayer = false;
