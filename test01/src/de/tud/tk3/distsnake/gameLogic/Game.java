@@ -220,7 +220,7 @@ public class Game {
 		// Decrease to remaining steps
 		gameBuilder.setRemainSteps(gameBuilder.getRemainSteps() - 1);
 
-		if (gameState.getRemainSteps() == 0) {
+		if (gameBuilder.getRemainSteps() == 0) {
 			if (helloObserver.isOnlyPlayer()) {
 				gameBuilder.setRemainSteps(GameStateHelper.DEFAULT_STEPS);
 			} else {
