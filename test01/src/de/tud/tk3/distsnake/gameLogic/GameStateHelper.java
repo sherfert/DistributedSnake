@@ -56,8 +56,9 @@ public class GameStateHelper {
 		List<Coordinates> l = state.getSnakeList();
 		Iterator<Coordinates> i = l.iterator();
 		while(i.hasNext()) {
-			if ((i.next().getX() == x )
-					&& (i.next().getY() == y))
+			Coordinates c = i.next();
+			if ((c.getX() == x )
+					&& (c.getY() == y))
 				return false;
 		}
 		return true;
