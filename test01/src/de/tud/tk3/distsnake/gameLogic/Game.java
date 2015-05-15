@@ -160,9 +160,9 @@ public class Game {
 						.build();
 			}
 			notifyOnGameUpdate(gameState);
-		} else {
-			helloObserver.onGameLeave(player);
 		}
+		
+		helloObserver.onGameLeave(player);
 		
 		// We're not the current player anymore
 		// isCurrentPlayer = false;
