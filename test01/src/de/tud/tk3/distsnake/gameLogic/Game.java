@@ -49,7 +49,7 @@ public class Game {
 	/**
 	 * The timer that handles scheduling of above task.
 	 */
-	//private Timer timer;
+	// private Timer timer;
 	private Thread task;
 
 	/**
@@ -69,7 +69,7 @@ public class Game {
 		boolean isFirstPlayer = helloObserver.isOnlyPlayer();
 		if (isFirstPlayer) {
 			createDefaultGameState();
-			//isCurrentPlayer = true;
+			// isCurrentPlayer = true;
 
 			startGameLoop();
 		} else {
@@ -86,7 +86,7 @@ public class Game {
 			@Override
 			public void run() {
 				// while > 0, so that once it is 0, no execution no more!
-				while(gameState.getRemainSteps() > 0 && !Thread.interrupted()) {
+				while (gameState.getRemainSteps() > 0 && !Thread.interrupted()) {
 					try {
 						Thread.sleep(GameStateHelper.DEFAULT_STEP_TIME_MS);
 					} catch (InterruptedException e) {
@@ -94,14 +94,16 @@ public class Game {
 					}
 					updateGameState();
 				}
-				
+
 			}
 		};
 		task.start();
 	}
 
 	public void createDefaultGameState() {
-		this.gameState = GameStateHelper.constructDefaultGameState(player);
+		synchronized (syncObject) {
+			this.gameState = GameStateHelper.constructDefaultGameState(player);
+		}
 	}
 
 	public List<GameStateUpdateObserver> getGameUpdateObservers() {
@@ -150,15 +152,18 @@ public class Game {
 		// steps 0!
 		if (isCurrentPlayer()) {
 			// The updating task should be cancelled.
-			//timer.cancel();
+			// timer.cancel();
 			task.interrupt();
 
-			this.gameState = gameState.toBuilder().setRemainSteps(0).build();
+			synchronized (syncObject) {
+				this.gameState = gameState.toBuilder().setRemainSteps(0)
+						.build();
+			}
 			notifyOnGameUpdate(gameState);
 		}
 
 		// We're not the current player anymore
-		//isCurrentPlayer = false;
+		// isCurrentPlayer = false;
 
 		// Unsubscribe and unpublish from game channel
 		Connector.getInstance().unregisterGameChannel();
@@ -181,65 +186,64 @@ public class Game {
 	 * Updates the game state and notifies all observers.
 	 */
 	private void updateGameState() {
-		Builder gameBuilder = gameState.toBuilder();
-
-		// Set the new orientation
-		Orientation orient = (newOrientation == null) ? gameBuilder.getOrient()
-				: newOrientation;
-		gameBuilder.setOrient(orient);
-		// Add the new head
-		Coordinates newHead = null;
-		Coordinates oldHead = gameBuilder.getSnake(0);
-		switch (orient) {
-		case NORTH:
-			newHead = oldHead.toBuilder().setY(oldHead.getY() - 1).build();
-			break;
-		case EAST:
-			newHead = oldHead.toBuilder().setX(oldHead.getX() + 1).build();
-			break;
-		case SOUTH:
-			newHead = oldHead.toBuilder().setY(oldHead.getY() + 1).build();
-			break;
-		case WEST:
-			newHead = oldHead.toBuilder().setX(oldHead.getX() - 1).build();
-			break;
-		}
-		gameBuilder.addSnake(0, newHead);
-		// Check if the goal was eaten
-		if (gameState.getGoal().getX() == newHead.getX()
-				&& gameState.getGoal().getY() == newHead.getY()) {
-			// Set a new goal
-			Coordinates newGoal = GameStateHelper.createRandomGoal(gameBuilder
-					.buildPartial());
-			gameBuilder.setGoal(newGoal);
-		} else {
-			// Remove the tail
-			gameBuilder.removeSnake(gameBuilder.getSnakeCount() - 1);
-		}
-
-		// Decrease to remaining steps
-		gameBuilder.setRemainSteps(gameBuilder.getRemainSteps() - 1);
-
-		if (gameBuilder.getRemainSteps() == 0) {
-			if (helloObserver.isOnlyPlayer()) {
-				gameBuilder.setRemainSteps(GameStateHelper.DEFAULT_STEPS);
-			} else {
-				//isCurrentPlayer = false;
-				//timer.cancel();
-				// No interruption necessary
-				//task.interrupt();
-			}
-		} else if(gameState.getRemainSteps() < 0) {
-			System.err.println("Execution continued. Remaining steps: " + gameState.getRemainSteps());
-			return;
-		}
-
-		// Set the new game state
 		synchronized (syncObject) {
+			Builder gameBuilder = gameState.toBuilder();
+
+			// Set the new orientation
+			Orientation orient = (newOrientation == null) ? gameBuilder
+					.getOrient() : newOrientation;
+			gameBuilder.setOrient(orient);
+			// Add the new head
+			Coordinates newHead = null;
+			Coordinates oldHead = gameBuilder.getSnake(0);
+			switch (orient) {
+			case NORTH:
+				newHead = oldHead.toBuilder().setY(oldHead.getY() - 1).build();
+				break;
+			case EAST:
+				newHead = oldHead.toBuilder().setX(oldHead.getX() + 1).build();
+				break;
+			case SOUTH:
+				newHead = oldHead.toBuilder().setY(oldHead.getY() + 1).build();
+				break;
+			case WEST:
+				newHead = oldHead.toBuilder().setX(oldHead.getX() - 1).build();
+				break;
+			}
+			gameBuilder.addSnake(0, newHead);
+			// Check if the goal was eaten
+			if (gameState.getGoal().getX() == newHead.getX()
+					&& gameState.getGoal().getY() == newHead.getY()) {
+				// Set a new goal
+				Coordinates newGoal = GameStateHelper
+						.createRandomGoal(gameBuilder.buildPartial());
+				gameBuilder.setGoal(newGoal);
+			} else {
+				// Remove the tail
+				gameBuilder.removeSnake(gameBuilder.getSnakeCount() - 1);
+			}
+
+			// Decrease to remaining steps
+			gameBuilder.setRemainSteps(gameBuilder.getRemainSteps() - 1);
+
+			if (gameBuilder.getRemainSteps() == 0) {
+				if (helloObserver.isOnlyPlayer()) {
+					gameBuilder.setRemainSteps(GameStateHelper.DEFAULT_STEPS);
+				} else {
+					// isCurrentPlayer = false;
+					// timer.cancel();
+					// No interruption necessary
+					// task.interrupt();
+				}
+			} else if (gameState.getRemainSteps() < 0) {
+				System.err.println("Execution continued. Remaining steps: "
+						+ gameState.getRemainSteps());
+				return;
+			}
+
+			// Set the new game state
 			this.gameState = gameBuilder.build();
 		}
-
-		
 
 		// Validate state
 		if (!isValidGameState(gameState)) {
@@ -323,16 +327,17 @@ public class Game {
 
 	public void onHello(String playerName) {
 		System.out.println(player + ": Hello received\t" + playerName);
-		synchronized (syncObject) {
-			if (isCurrentPlayer()) {
-				Builder gameStateBuilder = gameState.toBuilder();
-				gameState = gameStateBuilder.addPlayers(playerName).build();
+
+		if (isCurrentPlayer()) {
+			synchronized (syncObject) {
+				gameState = gameState.toBuilder().addPlayers(playerName)
+						.build();
 			}
 		}
 	}
 
 	public void onGameStateReceived(GameState state) {
-	
+
 		/*
 		 * TODO Validate if the players is in the playing screen in order to
 		 * execute the refresh if not nothing should be done
@@ -340,19 +345,22 @@ public class Game {
 
 		if (isValidGameState(state)) {
 			if (state.getRemainSteps() == 0 && isNextPlayer()) {
-				Builder gameStateBuilder = gameState.toBuilder();
-				gameStateBuilder.setRemainSteps(GameStateHelper.DEFAULT_STEPS);
-				String oldPlayer = gameStateBuilder.getPlayers(0);
-				// TODO not finished updating players list and taking turn
-				List<String> players = new ArrayList<String>(gameState.getPlayersList());
-				players.remove(0);
-				players.add(oldPlayer);
-				gameStateBuilder.clearPlayers().addAllPlayers(players);
-				synchronized(syncObject){
+				synchronized (syncObject) {
+					Builder gameStateBuilder = gameState.toBuilder();
+					gameStateBuilder
+							.setRemainSteps(GameStateHelper.DEFAULT_STEPS);
+					String oldPlayer = gameStateBuilder.getPlayers(0);
+					// TODO not finished updating players list and taking turn
+					List<String> players = new ArrayList<String>(
+							gameState.getPlayersList());
+					players.remove(0);
+					players.add(oldPlayer);
+					gameStateBuilder.clearPlayers().addAllPlayers(players);
+
 					gameState = gameStateBuilder.build();
 				}
 				notifyOnGameUpdate(gameState);
-				//isCurrentPlayer = true;
+				// isCurrentPlayer = true;
 				startGameLoop();
 			} else {
 				synchronized (syncObject) {
