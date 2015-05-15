@@ -65,28 +65,31 @@ public class Game {
 	 * will give him control over the game and otherwise not.
 	 */
 	public void startGame() {
-		boolean isFirstPlayer = helloObserver.isFirstPlayer();
+		boolean isFirstPlayer = helloObserver.isOnlyPlayer();
 		if (isFirstPlayer) {
 			createDefaultGameState();
 			isCurrentPlayer = true;
 
-			/**
-			 * The task that will update the game state in intervals.
-			 */
-			TimerTask task = new TimerTask() {
-				@Override
-				public void run() {
-					updateGameState();
-				}
-			};
-			timer = new Timer();
-			// Start the task repeatedly
-			timer.scheduleAtFixedRate(task,
-					GameStateHelper.DEFAULT_STEP_TIME_MS,
-					GameStateHelper.DEFAULT_STEP_TIME_MS);
+			startGameLoop();
 		} else {
 			helloObserver.onGameStart(player);
 		}
+	}
+
+	private void startGameLoop() {
+		/**
+		 * The task that will update the game state in intervals.
+		 */
+		TimerTask task = new TimerTask() {
+			@Override
+			public void run() {
+				updateGameState();
+			}
+		};
+		timer = new Timer();
+		// Start the task repeatedly
+		timer.scheduleAtFixedRate(task, GameStateHelper.DEFAULT_STEP_TIME_MS,
+				GameStateHelper.DEFAULT_STEP_TIME_MS);
 	}
 
 	public void createDefaultGameState() {
@@ -148,6 +151,7 @@ public class Game {
 		// We're not the current player anymore
 		isCurrentPlayer = false;
 
+
 		// Unsubscribe from game channel
 		Connector.getInstance().unregisterGameChannel();
 	}
@@ -207,6 +211,15 @@ public class Game {
 
 		// Decrease to remaining steps
 		gameBuilder.setRemainSteps(gameBuilder.getRemainSteps() - 1);
+
+		if (gameState.getRemainSteps() == 0) {
+			if (helloObserver.isOnlyPlayer()) {
+				gameBuilder.setRemainSteps(20);
+			} else {
+				isCurrentPlayer = false;
+				timer.cancel();
+			}
+		}
 
 		// Set the new game state
 		synchronized (syncObject) {
@@ -311,18 +324,20 @@ public class Game {
 		 * TODO Validate if the players is in the playing screen in otder to
 		 * execute the refresh if not nothing should be done
 		 */
-		// if (isValidGameState(state)) {
-		// if (state.getRemainSteps() == 0 && isNextPlayer()) {
-		// isCurrentPlayer = true;
-		// gameState = gameState.toBuilder()
-		// .setRemainSteps(GameStateHelper.DEFAULT_STEPS).build();
-		// String oldPlayer = gameState.toBuilder().getPlayers(0);
-		// // TODO not finished updating players list and taking turn
-		// }
-		//
-		// } else {
-		// // TODO end game
-		// }
+
+		if (isValidGameState(state)) {
+			if (state.getRemainSteps() == 0 && isNextPlayer()) {
+				isCurrentPlayer = true;
+				gameState = gameState.toBuilder()
+						.setRemainSteps(GameStateHelper.DEFAULT_STEPS).build();
+				String oldPlayer = gameState.toBuilder().getPlayers(0);
+				// TODO not finished updating players list and taking turn
+				startGameLoop();
+			}
+
+		} else {
+			gameLost();
+		}
 		notifyOnGameUpdate(gameState);
 
 	}

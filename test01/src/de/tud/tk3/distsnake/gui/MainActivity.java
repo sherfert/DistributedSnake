@@ -59,6 +59,7 @@ public class MainActivity extends Activity {
 			    .setIcon(android.R.drawable.ic_dialog_alert)
 			    .show();
 		} else {
+			Game.getInstance().setPlayer(username);
 			// XXX is it too fast register and then sending right away?
 			Connector.getInstance().registerGameChannel();
 			Game.getInstance().setPlayer(username);
