@@ -2,8 +2,6 @@ package de.tud.tk3.distsnake.gameLogic;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import de.tud.tk3.distsnake.GameStatus.GameState.Builder;
 import de.tud.tk3.distsnake.GameStatus.Coordinates;
@@ -32,11 +30,22 @@ public class Game {
 	private Game() {
 	}
 
+	/**
+	 * All observers for game updates.
+	 */
 	private List<GameStateUpdateObserver> gameUpdateObservers = new ArrayList<GameStateUpdateObserver>();
+	/**
+	 * The observer for hello updates.
+	 */
 	private HelloObserver helloObserver;
+	/**
+	 * The current game state.
+	 */
 	private GameState gameState;
-
 	private Object syncObject = new Object();
+	/**
+	 * The name of the player.
+	 */
 	private String player;
 
 	/**
@@ -48,7 +57,6 @@ public class Game {
 	/**
 	 * The timer that handles scheduling of above task.
 	 */
-	// private Timer timer;
 	private Thread task;
 
 	/**
@@ -70,7 +78,6 @@ public class Game {
 		if (isFirstPlayer) {
 			System.out.println("I'm the only player.");
 			createDefaultGameState();
-
 			startGameLoop();
 		} else {
 			helloObserver.onGameStart(player);
@@ -78,6 +85,11 @@ public class Game {
 		Connector.getInstance().subscribeHello();
 	}
 
+	/**
+	 * This starts the game loop that will continue running, as long is this
+	 * player is the current player. When another player gets control, the game
+	 * is lost, or he presses the back button, the loop is stopped.
+	 */
 	private void startGameLoop() {
 		/**
 		 * The task that will update the game state in intervals.
@@ -101,25 +113,29 @@ public class Game {
 		task.start();
 	}
 
+	/**
+	 * This creates the default game state as current game state with a random
+	 * goal.
+	 */
 	public void createDefaultGameState() {
 		synchronized (syncObject) {
 			this.gameState = GameStateHelper.constructDefaultGameState(player);
 		}
 	}
 
-	public List<GameStateUpdateObserver> getGameUpdateObservers() {
-		return gameUpdateObservers;
-	}
-
-	public void setGameUpdateObservers(
-			List<GameStateUpdateObserver> gameUpdateObservers) {
-		this.gameUpdateObservers = gameUpdateObservers;
-	}
-
+	/**
+	 * Sets the hello observer, which is the HelloPublisher
+	 */
 	public void setHelloObserver(HelloObserver helloObserver) {
 		this.helloObserver = helloObserver;
 	}
 
+	/**
+	 * Notifies all observers if the game state changed.
+	 * 
+	 * @param state
+	 *            the new state.
+	 */
 	public void notifyOnGameUpdate(GameState state) {
 		for (GameStateUpdateObserver observer : new ArrayList<GameStateUpdateObserver>(
 				gameUpdateObservers)) {
@@ -127,6 +143,12 @@ public class Game {
 		}
 	}
 
+	/**
+	 * Notifies all observers if the game was lost.
+	 * 
+	 * @param state
+	 *            the lost game state.
+	 */
 	public void notifyOnGameLost(GameState state) {
 		for (GameStateUpdateObserver observer : new ArrayList<GameStateUpdateObserver>(
 				gameUpdateObservers)) {
@@ -134,10 +156,22 @@ public class Game {
 		}
 	}
 
+	/**
+	 * Adds an observer for game updates
+	 * 
+	 * @param observer
+	 *            the observer
+	 */
 	public void subscribeGameUpdateObserver(GameStateUpdateObserver observer) {
 		gameUpdateObservers.add(observer);
 	}
 
+	/**
+	 * Removes an observer for game updates
+	 * 
+	 * @param observer
+	 *            the observer
+	 */
 	public void unsubscribeGameUpdateObserver(GameStateUpdateObserver observer) {
 		gameUpdateObservers.remove(observer);
 	}
@@ -161,22 +195,17 @@ public class Game {
 			}
 			notifyOnGameUpdate(gameState);
 		}
-		
-		new Thread(){
-			public void run(){
-				try{
-					Thread.sleep(500);
-					helloObserver.onGameLeave(player);
-					// Unsubscribe and unpublish from game channel
-					Connector.getInstance().unregisterGameChannel();
-					// Unsubscribe from hello channel
-					Connector.getInstance().unSubscribeHello();
-				} catch(InterruptedException e){
-					e.printStackTrace();
-				}
-				
-			}
-		}.start();
+
+		try {
+			Thread.sleep(500);
+			helloObserver.onGameLeave(player);
+			// Unsubscribe and unpublish from game channel
+			Connector.getInstance().unregisterGameChannel();
+			// Unsubscribe from hello channel
+			Connector.getInstance().unSubscribeHello();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -240,10 +269,6 @@ public class Game {
 				if (helloObserver.isOnlyPlayer()) {
 					gameBuilder.setRemainSteps(GameStateHelper.DEFAULT_STEPS);
 				}
-			} else if (gameState.getRemainSteps() < 0) {
-				System.err.println("Execution continued. Remaining steps: "
-						+ gameState.getRemainSteps());
-				return;
 			}
 
 			// Set the new game state
@@ -330,6 +355,12 @@ public class Game {
 		}
 	}
 
+	/**
+	 * Called when a new player joins the game.
+	 * 
+	 * @param playerName
+	 *            his/her name
+	 */
 	public void onHello(String playerName) {
 		System.out.println(player + ": Hello received\t" + playerName);
 
@@ -341,8 +372,17 @@ public class Game {
 		}
 	}
 
+	/**
+	 * Called when a remote gamestate is received
+	 * 
+	 * @param state
+	 *            the state
+	 */
 	public void onGameStateReceived(GameState state) {
+		// Checking if the game was lost
 		if (isValidGameState(state)) {
+			// If we're the next player, and the quantum is over
+			// We have to take over control
 			if (state.getRemainSteps() == 0 && isNextPlayer()) {
 				synchronized (syncObject) {
 					Builder gameStateBuilder = state.toBuilder();
@@ -361,6 +401,7 @@ public class Game {
 				notifyOnGameUpdate(gameState);
 				startGameLoop();
 			} else {
+				// Otherwise we just display the state
 				synchronized (syncObject) {
 					gameState = state;
 				}
@@ -368,11 +409,15 @@ public class Game {
 			}
 
 		} else {
+			// End the game if it was lost.
 			gameLost(gameState);
 		}
 
 	}
 
+	/**
+	 * @return if we're the next player in the list
+	 */
 	private boolean isNextPlayer() {
 		List<String> playerList = gameState.getPlayersList();
 		// XXX Be careful not to check for an inexistent player in an invalid
@@ -388,22 +433,22 @@ public class Game {
 	}
 
 	/**
-	 * removes a player from the game state if the player leaves
+	 * Removes a player from the game state if the player leaves.
 	 */
 	public void onFarewell(String playerName) {
 		System.out.println(player + ": Farewell received\t" + playerName);
 		synchronized (syncObject) {
 			if (isCurrentPlayer()) {
 				Builder gameStateBuilder = gameState.toBuilder();
-				
-				List<String> players = new ArrayList<String>(gameState.getPlayersList());
-				players.remove(playerName);				
+
+				List<String> players = new ArrayList<String>(
+						gameState.getPlayersList());
+				players.remove(playerName);
 				gameStateBuilder.clearPlayers().addAllPlayers(players);
-				
+
 				gameState = gameStateBuilder.build();
 			}
 		}
-		
 	}
 
 }

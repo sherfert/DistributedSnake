@@ -38,7 +38,7 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 	private final static int CANV_DRAW_OFFSET = 2;
 	private final static int DOT_DRAW_OFFSET = 1;
 	// private static final MAX_WIDTH = 300
-	
+
 	private AlertDialog.Builder aDialog;
 
 	private Button upButton, downButton, rightButton, leftButton;
@@ -79,7 +79,7 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 		snakePaint = new Paint();
 		snakePaint.setColor(Color.parseColor("#000000"));
 		snakePaint.setStyle(Paint.Style.FILL);
-		
+
 		borderPaint = new Paint();
 		borderPaint.setColor(Color.parseColor("#000000"));
 		borderPaint.setStyle(Paint.Style.STROKE);
@@ -91,18 +91,16 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 
 		// Register GUI as gamestate observer
 		Game.getInstance().subscribeGameUpdateObserver(this);
-		
+
 		aDialog = new AlertDialog.Builder(this)
-		.setTitle(R.string.gameActivity_gamelost_title)
-		.setPositiveButton(android.R.string.yes, 
-			new DialogInterface.OnClickListener() 
-			{
-				public void onClick(DialogInterface dialog, int whichButton) 
-				{
-					finish();
-				}
-			})
-		.setIcon(android.R.drawable.ic_dialog_alert);
+				.setTitle(R.string.gameActivity_gamelost_title)
+				.setPositiveButton(android.R.string.yes,
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int whichButton) {
+								finish();
+							}
+						}).setIcon(android.R.drawable.ic_dialog_alert);
 	}
 
 	/**
@@ -114,16 +112,16 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				aDialog.show(); 
-				
+				aDialog.show();
+
 			}
 		});
 	}
 
 	@Override
 	public void onGameUpdate(final GameState gameState) {
-		final String namesToDisplay = "<h1><b>" + gameState.getPlayers(0)
-				+ "("+ gameState.getRemainSteps() +")"+"</b></h1>";
+		final String namesToDisplay = "<h1><b>" + gameState.getPlayers(0) + "("
+				+ gameState.getRemainSteps() + ")" + "</b></h1>";
 		final StringBuilder playerList = new StringBuilder();
 
 		for (int i = 1; i < gameState.getPlayersCount(); i++)
@@ -137,8 +135,8 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 
 				// Background
 				canvas.drawColor(Color.parseColor("#DADADA"));
-				canvas.drawRect(0,0, maxWindowSize, maxWindowSize, borderPaint);
-				//canvas.drawRect(0, 0, maxWindowSize, maxWindowSize, bgPaint);
+				canvas.drawRect(0, 0, maxWindowSize, maxWindowSize, borderPaint);
+				// canvas.drawRect(0, 0, maxWindowSize, maxWindowSize, bgPaint);
 				// Snake
 				for (Coordinates snakePart : gameState.getSnakeList()) {
 					canvas.drawCircle((snakePart.getX() + DOT_DRAW_OFFSET)
@@ -173,7 +171,8 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 
 				// Redraw
 				LinearLayout ll = (LinearLayout) findViewById(R.id.gameActivity_linearLayout_canvas);
-				ll.invalidate();}
+				ll.invalidate();
+			}
 		});
 	}
 
@@ -207,7 +206,11 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 	// Do nothing when people pressed back key
 	@Override
 	public void onBackPressed() {
-		Game.getInstance().leaveGame();
+		new Thread() {
+			public void run() {
+				Game.getInstance().leaveGame();
+			}
+		}.start();
 		finish();
 	}
 }
