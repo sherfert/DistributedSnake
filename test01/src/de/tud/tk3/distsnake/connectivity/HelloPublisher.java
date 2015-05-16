@@ -34,10 +34,10 @@ public class HelloPublisher extends TypedPublisher implements HelloObserver {
 
 	/*
 	 * FIXME This method is buggy, when the app is force-closed and restarted.
-	 * It will return true, although there are other players already (i.e. there
-	 * should be subsribers).
+	 * It will return true, although there are other players already palying
+	 * (i.e. there should be subscribers).
 	 * 
-	 * We suspect, this is an MDNS issue and recommend not to force-close the
+	 * We suspect this is an MDNS issue and recommend not to force-close the
 	 * app in order to avoid this issue.
 	 */
 	@Override
