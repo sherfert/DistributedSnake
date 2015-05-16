@@ -48,6 +48,7 @@ public class MainActivity extends Activity {
 	TypedSubscriber fooSub;
 
 	public void startGame(View view) {
+		System.out.println("Pressed startGameButton");
 		Intent intent = new Intent(this, GameActivity.class);
 		EditText usernameEditText = (EditText) findViewById(R.id.mainActivity_editText_username);
 		final String username = usernameEditText.getText().toString();
@@ -85,5 +86,16 @@ public class MainActivity extends Activity {
 				Connector.getInstance().initialize(wifi2);
 			}
 		}.start();
+	}
+
+	// Do nothing when people pressed back key
+	@Override
+	public void onBackPressed() {
+		new Thread() {
+			public void von() {
+				Connector.getInstance().cleanup();
+			}
+		}.start();
+		super.onBackPressed();
 	}
 }
