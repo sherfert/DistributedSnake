@@ -6,29 +6,36 @@ import de.tud.tk3.distsnake.GameStatus.GameState;
 import de.tud.tk3.distsnake.gameLogic.Game;
 import de.tud.tk3.distsnake.gameLogic.GameStateUpdateObserver;
 
+/**
+ * A publisher for game states.
+ */
 public class GameStatePublisher extends TypedPublisher implements
 		GameStateUpdateObserver {
 
-	public GameStatePublisher(Game game) {
+	/**
+	 * Initializes a publisher.
+	 */
+	public GameStatePublisher() {
 		super("game");
-		game.subscribeGameUpdateObserver(this);		
+		Game.getInstance().subscribeGameUpdateObserver(this);
 	}
 
 	@Override
 	public void onGameUpdate(GameState state) {
-		if(Game.getInstance().isCurrentPlayer()) {
+		// Send the update, if we're the current player
+		if (Game.getInstance().isCurrentPlayer()) {
 			this.sendObject(state);
-		}		
+		}
 	}
 
 	@Override
 	public void onGameLost(GameState state) {
-		// Send the last state
-		if(Game.getInstance().isCurrentPlayer()) {
+		// Send the last state, if we're the current player
+		if (Game.getInstance().isCurrentPlayer()) {
 			this.sendObject(state);
 		}
+		// Unsubscribe
 		Game.getInstance().unsubscribeGameUpdateObserver(this);
-		
 	}
 
 }

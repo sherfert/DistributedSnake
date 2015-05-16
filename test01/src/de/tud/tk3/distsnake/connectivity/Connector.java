@@ -10,7 +10,6 @@ import android.net.wifi.WifiManager.MulticastLock;
 import android.util.Log;
 import de.tud.tk3.distsnake.GameStatus.GameState;
 import de.tud.tk3.distsnake.connectivity.HelloMSG.Hello;
-import de.tud.tk3.distsnake.gameLogic.Game;
 
 /**
  * Central connectivity module.
@@ -33,6 +32,7 @@ public class Connector {
 	private Connector() {
 	}
 
+	// Umundo stuff
 	private Discovery disc;
 	private Node node;
 	
@@ -84,9 +84,8 @@ public class Connector {
 	 */
 	public void registerGameChannel() {
 		System.out.println("Registering Game channel");
-		// Adding game publisher (needs to be recreated every time!)
-		gameStatePublisher = new GameStatePublisher(
-				Game.getInstance());
+		// Adding game publisher (needs to be recreated every time for observer stuff)
+		gameStatePublisher = new GameStatePublisher();
 		node.addPublisher(gameStatePublisher);
 		
 		// Adding game subscriber

@@ -3,23 +3,22 @@ package de.tud.tk3.distsnake.connectivity;
 import org.umundo.core.Message;
 import org.umundo.s11n.ITypedReceiver;
 
-import android.app.Activity;
-import de.tud.tk3.distsnake.GameStatus.GameState;
 import de.tud.tk3.distsnake.gameLogic.Game;
-import de.tud.tk3.distsnake.gui.MainActivity;
 import de.tud.tk3.distsnake.connectivity.HelloMSG.Hello;
 
+/**
+ * A receiver for hello messages.
+ */
 public class HelloReceiver implements ITypedReceiver {
-			
-	public HelloReceiver() {
-	}
 
+	@Override
 	public void receiveObject(Object object, Message msg) {
 		final Hello helloMsg = (Hello) object;
-		if(helloMsg.getMsg().equals("farewell")){
+		// Forward to the game depending if it was hello or farewell
+		if (helloMsg.getMsg().equals("farewell")) {
 			Game.getInstance().onFarewell(helloMsg.getName());
 		} else {
 			Game.getInstance().onHello(helloMsg.getName());
-		}		
+		}
 	}
 }
