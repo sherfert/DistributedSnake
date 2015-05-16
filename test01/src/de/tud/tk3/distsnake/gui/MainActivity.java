@@ -91,7 +91,7 @@ public class MainActivity extends Activity {
 	@Override
 	public void onBackPressed() {
 		new Thread() {
-			public void von() {
+			public void run() {
 				Connector.getInstance().cleanup();
 			}
 		}.start();

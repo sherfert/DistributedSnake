@@ -97,6 +97,7 @@ public class Connector {
 	 * Unregisters subscriber and publisher from the game channel.
 	 */
 	public void unregisterGameChannel() {
+		System.out.println("Unregistering Game channel");
 		node.removePublisher(gameStatePublisher);
 		node.removeSubscriber(gameSub);
 	}
@@ -104,12 +105,14 @@ public class Connector {
 	 * Subscribe in hello channel
 	 */
 	public void subscribeHello(){
+		System.out.println("Subscribing Hello channel");
 		node.addSubscriber(helloSub);		
 	}
 	/**
 	 * Unsubscribe from hello channel
 	 */
 	public void unSubscribeHello(){
+		System.out.println("Unsubscribing Hello channel");
 		node.removeSubscriber(helloSub);
 	}
 	
@@ -117,6 +120,7 @@ public class Connector {
 	 * Cleans up publishers and receivers.
 	 */
 	public void cleanup() {
+		System.out.println("Connector cleanup");
 		node.delete();
 		disc.delete();
 	}
