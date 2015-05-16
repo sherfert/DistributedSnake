@@ -83,6 +83,7 @@ public class Connector {
 	 * Registers subscriber and publisher from the game channel.
 	 */
 	public void registerGameChannel() {
+		System.out.println("Registering Game channel");
 		// Adding game publisher (needs to be recreated every time!)
 		gameStatePublisher = new GameStatePublisher(
 				Game.getInstance());

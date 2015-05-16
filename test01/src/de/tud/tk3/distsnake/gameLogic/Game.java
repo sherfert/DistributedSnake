@@ -66,8 +66,10 @@ public class Game {
 	 * will give him control over the game and otherwise not.
 	 */
 	public void startGame() {
+		System.out.println("Entered Game.startGame");
 		boolean isFirstPlayer = helloObserver.isOnlyPlayer();
 		if (isFirstPlayer) {
+			System.out.println("I'm the only player.");
 			createDefaultGameState();
 			// isCurrentPlayer = true;
 
@@ -82,6 +84,7 @@ public class Game {
 		/**
 		 * The task that will update the game state in intervals.
 		 */
+		System.out.println("starting the game loop");
 		task = new Thread() {
 			@Override
 			public void run() {
@@ -167,21 +170,16 @@ public class Game {
 				try{
 					Thread.sleep(500);
 					helloObserver.onGameLeave(player);
+					// Unsubscribe and unpublish from game channel
+					Connector.getInstance().unregisterGameChannel();
+					// Unsubscribe from hello channel
+					Connector.getInstance().unSubscribeHello();
 				} catch(InterruptedException e){
 					e.printStackTrace();
 				}
 				
 			}
 		}.start();
-		
-		
-		// We're not the current player anymore
-		// isCurrentPlayer = false;
-
-		// Unsubscribe and unpublish from game channel
-		Connector.getInstance().unregisterGameChannel();
-		// Unsubscribe from hello channel
-		Connector.getInstance().unSubscribeHello();
 	}
 
 	/**
