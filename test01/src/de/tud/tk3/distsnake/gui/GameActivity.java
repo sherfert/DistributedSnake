@@ -25,6 +25,9 @@ import de.tud.tk3.distsnake.gameLogic.Game;
 import de.tud.tk3.distsnake.gameLogic.GameStateHelper;
 import de.tud.tk3.distsnake.gameLogic.GameStateUpdateObserver;
 
+/**
+ * The game activity with the grid and the direction buttons.
+ */
 public class GameActivity extends Activity implements GameStateUpdateObserver {
 
 	private Canvas canvas;
@@ -33,11 +36,9 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 	private Paint goalPaint;
 	private Paint borderPaint;
 	private TextView currentPlayer;
-	private String username;
 
 	private final static int CANV_DRAW_OFFSET = 2;
 	private final static int DOT_DRAW_OFFSET = 1;
-	// private static final MAX_WIDTH = 300
 
 	private AlertDialog.Builder aDialog;
 
@@ -49,7 +50,6 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 		setContentView(R.layout.activity_game);
 
 		// Initialize fields
-		username = getIntent().getExtras().getString("username");
 		currentPlayer = (TextView) findViewById(R.id.gameActivity_textView_currentPlayer);
 		upButton = (Button) findViewById(R.id.gameActivity_button_up);
 		downButton = (Button) findViewById(R.id.gameActivity_button_down);
@@ -92,6 +92,7 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 		// Register GUI as gamestate observer
 		Game.getInstance().subscribeGameUpdateObserver(this);
 
+		// Define the dialog that will be shown when the game is lost.
 		aDialog = new AlertDialog.Builder(this)
 				.setTitle(R.string.gameActivity_gamelost_title)
 				.setPositiveButton(android.R.string.yes,
@@ -118,6 +119,9 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 		});
 	}
 
+	/*
+	 * When a game update is received, the GUI needs to update.
+	 */
 	@Override
 	public void onGameUpdate(final GameState gameState) {
 		final String namesToDisplay = "<h1><b>" + gameState.getPlayers(0) + "("
@@ -203,7 +207,7 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 		}
 	}
 
-	// Do nothing when people pressed back key
+	// Leave the game when the back button is pressed.
 	@Override
 	public void onBackPressed() {
 		new Thread() {
