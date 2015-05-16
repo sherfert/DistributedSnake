@@ -61,7 +61,6 @@ public class MainActivity extends Activity {
 		} else {
 			new Thread() {
 				public void run() {
-					// XXX is it too fast register and then sending right away?
 					Connector.getInstance().registerGameChannel();
 					Game.getInstance().setPlayer(username);
 					Game.getInstance().startGame();

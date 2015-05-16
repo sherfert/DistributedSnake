@@ -35,7 +35,6 @@ public class Game {
 	private List<GameStateUpdateObserver> gameUpdateObservers = new ArrayList<GameStateUpdateObserver>();
 	private HelloObserver helloObserver;
 	private GameState gameState;
-	// XXX private boolean isCurrentPlayer;
 
 	private Object syncObject = new Object();
 	private String player;
@@ -71,7 +70,6 @@ public class Game {
 		if (isFirstPlayer) {
 			System.out.println("I'm the only player.");
 			createDefaultGameState();
-			// isCurrentPlayer = true;
 
 			startGameLoop();
 		} else {
@@ -155,7 +153,6 @@ public class Game {
 		// steps 0!
 		if (isCurrentPlayer()) {
 			// The updating task should be cancelled.
-			// timer.cancel();
 			task.interrupt();
 
 			synchronized (syncObject) {
@@ -184,6 +181,8 @@ public class Game {
 
 	/**
 	 * This method is called when the game is lost.
+	 * 
+	 * XXX if lost game state is received, the GUI is not updated
 	 */
 	private void gameLost(GameState state) {
 		// leave the game
@@ -240,11 +239,6 @@ public class Game {
 			if (gameBuilder.getRemainSteps() == 0) {
 				if (helloObserver.isOnlyPlayer()) {
 					gameBuilder.setRemainSteps(GameStateHelper.DEFAULT_STEPS);
-				} else {
-					// isCurrentPlayer = false;
-					// timer.cancel();
-					// No interruption necessary
-					// task.interrupt();
 				}
 			} else if (gameState.getRemainSteps() < 0) {
 				System.err.println("Execution continued. Remaining steps: "
@@ -347,14 +341,7 @@ public class Game {
 		}
 	}
 
-	// TODO if lost game state is received, the GUI is not updated
 	public void onGameStateReceived(GameState state) {
-
-		/*
-		 * TODO Validate if the players is in the playing screen in order to
-		 * execute the refresh if not nothing should be done
-		 */
-
 		if (isValidGameState(state)) {
 			if (state.getRemainSteps() == 0 && isNextPlayer()) {
 				synchronized (syncObject) {
@@ -362,7 +349,7 @@ public class Game {
 					gameStateBuilder
 							.setRemainSteps(GameStateHelper.DEFAULT_STEPS);
 					String oldPlayer = gameStateBuilder.getPlayers(0);
-					// TODO not finished updating players list and taking turn
+
 					List<String> players = new ArrayList<String>(
 							state.getPlayersList());
 					players.remove(0);
@@ -372,7 +359,6 @@ public class Game {
 					gameState = gameStateBuilder.build();
 				}
 				notifyOnGameUpdate(gameState);
-				// isCurrentPlayer = true;
 				startGameLoop();
 			} else {
 				synchronized (syncObject) {
@@ -389,7 +375,7 @@ public class Game {
 
 	private boolean isNextPlayer() {
 		List<String> playerList = gameState.getPlayersList();
-		// TODO Be careful not to check for an inexistent player in an invalid
+		// XXX Be careful not to check for an inexistent player in an invalid
 		// position
 		return player.equals(playerList.get(1));
 	}

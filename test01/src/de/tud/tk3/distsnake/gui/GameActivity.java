@@ -177,7 +177,6 @@ public class GameActivity extends Activity implements GameStateUpdateObserver {
 		});
 	}
 
-	// XXX Add border around actually used part of canvas
 	/**
 	 * Return the size of one snake unit in dp.
 	 */
