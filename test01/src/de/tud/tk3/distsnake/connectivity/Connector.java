@@ -120,9 +120,10 @@ public class Connector {
 	 * Cleans up publishers and receivers.
 	 */
 	public void cleanup() {
-		System.out.println("Connector cleanup");
+		System.out.println("Connector cleanup node");
 		node.delete();
-		disc.delete();
+		//System.out.println("Connector cleanup discovery");
+		//disc.delete();
 	}
 
 }
