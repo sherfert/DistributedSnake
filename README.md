@@ -1,5 +1,7 @@
 # Distributed Snake
 
+[Video](https://www.youtube.com/watch?v=mM66cg8x3Oc)
+
 Distributed Snake is a collaborative game for Android. Simply launch the App and all
 people in the same WiFi network can join your game (if your WiFi supports mDNS). Enjoy
 a classic Snake game where users take turns to control the reptile.
